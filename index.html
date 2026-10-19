@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3F5F9">
+<title>NokosStore - Nomor Virtual OTP Murah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<style>
+/* ========== TOKEN WARNA ========== */
+:root{
+  --bg:#F3F5F9;
+  --surface:#FFFFFF;
+  --surface-2:#E8ECF4;
+  --ink:#0E1726;
+  --muted:#5B6B82;
+  --line:#DCE2EC;
+  --accent:#FF5A1F;
+  --accent-ink:#FFFFFF;
+  --ok:#0F9D58;
+  --warn:#B86E00;
+  --bad:#D93025;
+  --nav:rgba(255,255,255,.94);
+  --shadow:0 1px 2px rgba(14,23,38,.06), 0 8px 24px rgba(14,23,38,.06);
+  --radius:16px;
+  color-scheme: light;
+}
+[data-theme="dark"]{
+  --bg:#0A111E;
+  --surface:#131C2E;
+  --surface-2:#1B2740;
+  --ink:#E8EEF8;
+  --muted:#8E9BB3;
+  --line:#22304A;
+  --accent:#FF7A47;
+  --accent-ink:#0A111E;
+  --ok:#34D399;
+  --warn:#FBBF24;
+  --bad:#F87171;
+  --nav:rgba(19,28,46,.94);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+/* ========== DASAR ========== */
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Manrope",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;min-height:100dvh;
+  padding-bottom:calc(92px + env(safe-area-inset-bottom,0px));
+  transition:background .25s,color .25s;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit;text-decoration:none}
+img{display:block}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.material-symbols-rounded{
+  font-family:"Material Symbols Rounded";font-weight:400;font-style:normal;
+  font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;
+  display:inline-block;white-space:nowrap;direction:ltr;
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+.display{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+
+/* ========== HEADER ========== */
+header{
+  position:sticky;top:0;z-index:20;
+  background:var(--bg);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  height:64px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;background:var(--ink);color:var(--bg);
+  display:grid;place-items:center;
+}
+.brand-mark .material-symbols-rounded{font-size:21px;color:var(--accent)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.chip{
+  display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;
+  background:var(--surface);box-shadow:var(--shadow);font-weight:700;font-size:14px;
+}
+.chip .material-symbols-rounded{font-size:18px;color:var(--accent)}
+.icon-btn{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+
+/* ========== HALAMAN ========== */
+.page{display:none;animation:rise .35s ease both}
+.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.hero{
+  margin-top:6px;padding:22px;border-radius:22px;background:var(--ink);color:var(--bg);
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;
+  background:var(--accent);opacity:.9;
+}
+.hero h1{font-size:30px;line-height:1.08;position:relative;z-index:1;font-weight:800}
+.hero p{margin-top:8px;opacity:.78;font-size:15px;position:relative;z-index:1;max-width:30ch}
+.hero .bal{margin-top:20px;position:relative;z-index:1;font-size:13px;opacity:.7}
+.hero .bal b{display:block;font-size:26px;opacity:1;margin-top:2px;font-family:"Bricolage Grotesque";}
+.hero-cta{
+  margin-top:16px;position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;
+  background:var(--bg);color:var(--ink);padding:11px 16px;border-radius:12px;font-weight:700;
+}
+
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 10px}
+.section-head h2{font-size:18px;font-family:"Bricolage Grotesque";font-weight:800}
+.section-head span{font-size:13px;color:var(--muted)}
+
+/* Daftar layanan (baris, bukan kartu-kartu) */
+.list{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.svc{
+  width:100%;display:flex;align-items:center;gap:14px;padding:13px 14px;text-align:left;
+  border-top:1px solid var(--line);transition:background .15s;
+}
+.svc:first-child{border-top:0}
+.svc:hover{background:var(--surface-2)}
+.svc:active{transform:scale(.995)}
+.svc .name{flex:1;font-weight:700;font-size:15px}
+.svc .name small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
+.svc .price{font-family:"Bricolage Grotesque";font-weight:800;font-size:16px;white-space:nowrap}
+.svc.selected{background:var(--surface-2)}
+.svc.selected .price{color:var(--accent)}
+
+.ico{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;
+  position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);
+}
+[data-theme="dark"] .ico{background:#F4F6FA}
+.ico svg{width:24px;height:24px;display:block}
+.ico img.logo-img{position:absolute;inset:7px;width:28px;height:28px;object-fit:contain}
+.ico .init{font-family:"Bricolage Grotesque";font-weight:800;color:var(--ink);font-size:17px}
+.brand-mask{
+  position:absolute;inset:9px;background:var(--c);
+  -webkit-mask:var(--m) center / contain no-repeat;
+          mask:var(--m) center / contain no-repeat;
+}
+
+/* ========== ORDER / DEPOSIT FORM ========== */
+.panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:700;color:var(--muted)}
+.input{
+  width:100%;height:50px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);
+  padding:0 14px;font-size:16px;font-weight:600;outline:none;transition:border-color .15s;
+}
+.input:focus{border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.qchip{
+  height:36px;padding:0 13px;border-radius:999px;border:1.5px solid var(--line);
+  font-weight:700;font-size:13.5px;background:var(--bg);
+}
+.qchip.on{border-color:var(--accent);color:var(--accent)}
+.btn{
+  width:100%;height:52px;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+  font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .1s, filter .15s;
+}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:scale(.99)}
+.btn.ghost{background:var(--surface-2);color:var(--ink)}
+.btn.sm{height:40px;width:auto;padding:0 14px;font-size:14px;border-radius:11px}
+.btn.danger{background:var(--bad);color:#fff}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+
+.summary{display:flex;justify-content:space-between;align-items:center;margin:4px 0 16px;font-size:14px;color:var(--muted)}
+.summary b{font-family:"Bricolage Grotesque";font-size:20px;color:var(--ink)}
+
+/* Riwayat */
+.hist{margin-top:22px}
+.hist-item{
+  display:flex;gap:12px;align-items:center;padding:14px;border-top:1px solid var(--line);
+}
+.hist-item:first-child{border-top:0}
+.hist-item .meta{flex:1;min-width:0}
+.hist-item .meta b{display:block;font-size:15px}
+.hist-item .meta small{color:var(--muted);font-size:12.5px;word-break:break-all}
+.hist-item .amt{font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;white-space:nowrap}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;
+  padding:4px 9px;border-radius:999px;margin-top:4px;
+}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.pending{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.badge.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.badge.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.badge.wait{color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.empty{padding:26px 18px;text-align:center;color:var(--muted);font-size:14px}
+.empty .material-symbols-rounded{font-size:34px;display:block;margin:0 auto 8px;opacity:.6}
+.small-act{margin-top:8px}
+
+/* ========== PROFIL ========== */
+.profile-head{display:flex;align-items:center;gap:14px;margin:6px 2px 18px}
+.avatar{
+  width:64px;height:64px;border-radius:20px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:26px;
+}
+.profile-head h1{font-size:22px;font-weight:800}
+.profile-head p{color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--surface);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted);font-size:12.5px;font-weight:700}
+.stat b{display:block;font-family:"Bricolage Grotesque";font-size:20px;margin-top:4px}
+.menu{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.menu button,.menu a{
+  width:100%;display:flex;align-items:center;gap:12px;padding:15px 16px;text-align:left;font-weight:700;
+  border-top:1px solid var(--line);font-size:15px;
+}
+.menu > :first-child{border-top:0}
+.menu button:hover,.menu a:hover{background:var(--surface-2)}
+.menu .material-symbols-rounded{color:var(--muted)}
+.menu .right{margin-left:auto;color:var(--muted);font-size:13px;font-weight:600}
+
+/* ========== NAVBAR BAWAH ========== */
+nav.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:var(--nav);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+nav.bottom .row{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px 10px}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:14px;
+  font-size:12px;font-weight:700;color:var(--muted);transition:color .15s;
+}
+.nav-item .pill{
+  width:58px;height:30px;border-radius:999px;display:grid;place-items:center;transition:background .2s;
+}
+.nav-item.active{color:var(--ink)}
+.nav-item.active .pill{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
+.nav-item.active .material-symbols-rounded{font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24}
+
+/* ========== WA MENGAMBANG ========== */
+
+
+/* ========== MODAL ========== */
+.overlay{
+  position:fixed;inset:0;z-index:50;background:rgba(5,10,20,.55);backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;justify-content:center;padding:16px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{
+  width:100%;max-width:440px;background:var(--surface);color:var(--ink);border-radius:22px;
+  padding:20px;box-shadow:0 30px 60px rgba(0,0,0,.35);
+  transform:translateY(24px) scale(.98);transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  max-height:88dvh;overflow:auto;
+}
+.overlay.show .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.modal-head h3{font-family:"Bricolage Grotesque";font-size:20px;font-weight:800}
+.modal p{color:var(--muted);font-size:14.5px;line-height:1.55}
+.modal .kv{background:var(--bg);border-radius:14px;padding:12px 14px;margin:14px 0;display:grid;gap:8px}
+.modal .kv div{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.modal .kv span{color:var(--muted)}
+.modal .kv b{text-align:right;word-break:break-all}
+.modal .actions{display:grid;gap:10px;margin-top:16px}
+.copy-line{display:flex;align-items:center;gap:8px}
+.copy-line code{flex:1;background:var(--bg);padding:10px 12px;border-radius:10px;font-weight:700;word-break:break-all}
+@media (min-width:640px){.overlay{align-items:center}}
+
+/* ========== TOAST ========== */
+.toast{
+  position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:60;
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;font-weight:700;font-size:14px;
+  transition:.25s;max-width:90vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ========== TAMPILAN: LANDING vs APLIKASI ========== */
+#landing{display:none}
+body:not(.in-app){padding-bottom:0}
+body:not(.in-app) #landing{display:block}
+body:not(.in-app) .app-only{display:none!important}
+
+.lp-top{display:flex;align-items:center;justify-content:space-between;height:68px}
+.lp-top .top-actions .chip{cursor:pointer}
+.lp-hero{padding:34px 18px 26px}
+.lp-hero h1{font-size:40px;line-height:1.04;font-weight:800}
+.lp-hero p{margin-top:14px;color:var(--muted);font-size:16px;line-height:1.6;max-width:44ch}
+.lp-cta{display:grid;gap:10px;margin-top:24px}
+.lp-skip{margin-top:14px;font-weight:700;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.lp-sec{padding:24px 18px}
+.lp-sec h2{font-size:24px;font-weight:800;margin-bottom:14px}
+.feat-grid{display:grid;gap:10px}
+.feat{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;display:flex;gap:14px;align-items:flex-start}
+.feat > .material-symbols-rounded{color:var(--accent);font-size:26px;margin-top:1px}
+.feat b{display:block;font-size:15.5px;margin-bottom:3px}
+.feat p{color:var(--muted);font-size:14px;line-height:1.5}
+.faq{display:grid;gap:8px}
+.faq details{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:0 16px}
+.faq summary{list-style:none;cursor:pointer;padding:15px 0;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .material-symbols-rounded{transition:transform .2s;color:var(--muted)}
+.faq details[open] summary .material-symbols-rounded{transform:rotate(180deg)}
+.faq details p{padding:0 0 16px;color:var(--muted);font-size:14.5px;line-height:1.6}
+.lp-final{margin:4px 18px 26px;background:var(--ink);color:var(--bg);border-radius:22px;padding:26px 22px}
+.lp-final h2{font-size:24px;font-weight:800}
+.lp-final p{opacity:.75;margin:8px 0 18px;font-size:14.5px}
+.lp-final .btn{background:var(--accent);color:var(--accent-ink)}
+.lp-foot{text-align:center;color:var(--muted);font-size:13px;padding-bottom:30px}
+
+/* ========== AUTH ========== */
+.auth-tabs{display:flex;background:var(--bg);padding:4px;border-radius:12px;margin-bottom:14px}
+.auth-tab{flex:1;height:38px;border-radius:9px;font-weight:700;color:var(--muted)}
+.auth-tab.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.err{color:var(--bad);font-size:13.5px;font-weight:700;min-height:18px;margin:4px 0 2px}
+.modal .field{margin-bottom:12px}
+.guest-box{padding:26px 18px;text-align:center}
+.guest-box .material-symbols-rounded{font-size:40px;color:var(--accent);display:block;margin:0 auto 10px}
+.guest-box h3{font-family:"Bricolage Grotesque";font-size:20px;font-weight:800;margin-bottom:6px}
+.guest-box p{color:var(--muted);font-size:14.5px;margin-bottom:16px;line-height:1.5}
+
+/* ========== LOADING PEMBUATAN AKUN ========== */
+.loading{text-align:center;padding:24px 8px 12px}
+.loading b{display:block;font-family:"Bricolage Grotesque";font-size:18px;font-weight:800}
+.loading p{margin-top:6px;color:var(--muted);font-size:14px;font-weight:700}
+.spinner{
+  width:46px;height:46px;margin:0 auto 16px;border-radius:50%;
+  border:4px solid var(--line);border-top-color:var(--accent);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+
+
+/* ========== MODAL LANJUTKAN PEMBELIAN ========== */
+.prev-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prev-head b{display:block;font-size:17px}
+.prev-head small{color:var(--muted);font-size:13px}
+.num-box{background:var(--bg);border-radius:14px;padding:14px;text-align:center;margin-bottom:12px}
+.num-box small{color:var(--muted);font-size:12.5px;font-weight:700}
+.num{font-family:"Bricolage Grotesque";font-weight:800;font-size:24px;letter-spacing:.04em;margin-top:4px;word-break:break-all}
+.prov-box{margin-bottom:12px}
+.prov-box small{display:block;color:var(--muted);font-size:12.5px;font-weight:700;margin-bottom:8px}
+.prov-box .chips{margin-bottom:0}
+
+/* =====================================================
+   TEMA BARU: BLUE OCEAN (modern, aesthetic, responsif)
+   ===================================================== */
+:root{
+  --bg:#EEF6FC;
+  --bg-grad:
+    radial-gradient(1100px 620px at 0% -10%, #D2ECFF 0%, transparent 60%),
+    radial-gradient(900px 560px at 110% 0%, #C4E4FA 0%, transparent 55%),
+    linear-gradient(180deg, #F4FAFF 0%, #E6F2FB 100%);
+  --surface:rgba(255,255,255,.80);
+  --modal:#FFFFFF;
+  --surface-2:#E3F1FA;
+  --ink:#0A2540;
+  --muted:#557089;
+  --line:#D3E4F2;
+  --accent:#0284C7;
+  --accent-ink:#FFFFFF;
+  --ok:#059669;
+  --warn:#B45309;
+  --bad:#DC2626;
+  --nav:rgba(255,255,255,.86);
+  --shadow:0 1px 2px rgba(10,37,64,.04), 0 12px 32px rgba(2,132,199,.10);
+  --grad:linear-gradient(135deg, #0369A1 0%, #0284C7 55%, #38BDF8 100%);
+  --wave:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 120' preserveAspectRatio='none'><path d='M0 70 C160 20 320 110 480 60 C620 16 700 70 800 45 L800 120 L0 120Z' fill='rgba(255,255,255,0.16)'/></svg>");
+}
+[data-theme="dark"]{
+  --bg:#03131F;
+  --bg-grad:
+    radial-gradient(1000px 600px at 0% -10%, #0B3457 0%, transparent 60%),
+    radial-gradient(800px 520px at 110% 0%, #0A2A48 0%, transparent 55%),
+    linear-gradient(180deg, #041A2C 0%, #02101B 100%);
+  --surface:rgba(12,40,66,.74);
+  --modal:#0B2440;
+  --surface-2:#123452;
+  --ink:#E4F2FF;
+  --muted:#8DB0CC;
+  --line:#1B3F60;
+  --accent:#38BDF8;
+  --accent-ink:#03131F;
+  --ok:#34D399;
+  --warn:#FBBF24;
+  --bad:#F87171;
+  --nav:rgba(10,36,60,.86);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 36px rgba(0,0,0,.35);
+  --grad:linear-gradient(135deg, #0EA5E9 0%, #38BDF8 60%, #7DD3FC 100%);
+}
+
+body{background:var(--bg-grad) var(--bg);background-attachment:scroll}
+header{
+  background:color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.brand-mark{background:var(--grad);box-shadow:0 8px 18px rgba(2,132,199,.3)}
+.brand-mark .material-symbols-rounded{color:#fff}
+.chip,.icon-btn{
+  background:var(--surface);border:1px solid var(--line);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.chip .material-symbols-rounded{color:var(--accent)}
+
+/* Hero */
+.hero{
+  background:var(--wave) 0 100% / 100% 70px no-repeat, var(--grad);
+  color:#fff;box-shadow:0 22px 44px rgba(2,132,199,.28);
+}
+.hero::after{background:rgba(255,255,255,.14)}
+.hero p{opacity:.92}
+.hero .bal{opacity:.85}
+.hero-cta{background:#fff;color:#0369A1;box-shadow:0 8px 18px rgba(3,105,161,.25)}
+
+/* Kartu & panel kaca */
+.list,.panel,.feat,.stat,.menu,.faq details,.status-card{
+  background:var(--surface);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+.modal{
+  background:var(--modal);color:var(--ink);
+  border:1px solid var(--line);
+  box-shadow:0 30px 70px rgba(2,132,199,.22);
+}
+.overlay{background:rgba(3,19,31,.45)}
+.svc:hover{background:var(--surface-2)}
+.svc.selected{background:var(--surface-2)}
+.input{background:var(--bg);border-color:var(--line)}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent)}
+.qchip{background:var(--surface);border-color:var(--line)}
+.qchip.on{background:color-mix(in srgb, var(--accent) 14%, transparent);border-color:var(--accent);color:var(--accent)}
+
+/* Tombol */
+.btn{background:var(--grad);color:#fff;box-shadow:0 10px 22px rgba(2,132,199,.28)}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:none}
+.btn.danger{background:var(--bad);box-shadow:none}
+
+/* Navbar bawah */
+nav.bottom{
+  background:var(--nav);border-top:1px solid var(--line);
+  box-shadow:0 -10px 30px rgba(2,132,199,.08);
+}
+.nav-item.active .pill{background:var(--grad);color:#fff;box-shadow:0 6px 14px rgba(2,132,199,.3)}
+.nav-item.active .pill .material-symbols-rounded{color:#fff}
+
+/* Landing */
+.lp-hero h1{
+  font-size:clamp(32px, 8vw, 60px);line-height:1.04;
+  background:linear-gradient(120deg, var(--ink) 30%, var(--accent) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lp-hero p{color:var(--muted)}
+.lp-skip{color:var(--accent)}
+.feat > .material-symbols-rounded{
+  background:var(--surface-2);color:var(--accent);
+  border-radius:12px;padding:8px;font-size:22px;
+}
+.lp-final{background:var(--grad);color:#fff;box-shadow:0 22px 44px rgba(2,132,199,.28)}
+.lp-final .btn{background:#fff;color:#0369A1;box-shadow:none}
+.lp-final p{opacity:.92}
+.guest-box .material-symbols-rounded{color:var(--accent)}
+.spinner{border-top-color:var(--accent)}
+
+/* =====================================================
+   TEMA NEOBRUTALISM
+   Border tebal, bayangan keras tanpa blur, warna flat cerah
+   ===================================================== */
+:root{
+  --bg:#FFF6DB;
+  --bg-grad:none;
+  --surface:#FFFFFF;
+  --modal:#FFFFFF;
+  --surface-2:#FFE9A8;
+  --ink:#000000;
+  --muted:#3A3A3A;
+  --line:#000000;
+  --accent:#FF3D7F;
+  --accent-ink:#000000;
+  --ok:#00A86B;
+  --warn:#B45309;
+  --bad:#FF3B3B;
+  --nav:#FFFFFF;
+  --shadow:5px 5px 0 var(--line);
+  --grad:#FFD23F;
+  --nb-radius:14px;
+}
+[data-theme="dark"]{
+  --bg:#121216;
+  --bg-grad:none;
+  --surface:#1C1C24;
+  --modal:#1C1C24;
+  --surface-2:#2B2B36;
+  --ink:#FFF8E7;
+  --muted:#BDB9A8;
+  --line:#FFF8E7;
+  --accent:#FF7AA2;
+  --accent-ink:#000000;
+  --nav:#1C1C24;
+  --shadow:5px 5px 0 var(--line);
+  --grad:#FFD23F;
+}
+
+body{background:var(--bg);color:var(--ink)}
+header{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:3px solid var(--line)}
+.brand{font-weight:900}
+.brand-mark{background:#FFD23F;color:#000;border:3px solid var(--line);box-shadow:3px 3px 0 var(--line);border-radius:12px}
+.brand-mark .material-symbols-rounded{color:#000}
+.chip,.icon-btn{
+  background:var(--surface);border:3px solid var(--line);box-shadow:3px 3px 0 var(--line);
+  backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:12px;color:var(--ink);
+}
+.chip .material-symbols-rounded{color:var(--ink)}
+
+/* Hero */
+.hero{
+  background:#FFD23F;color:#000;border:3px solid var(--line);
+  border-radius:20px;box-shadow:8px 8px 0 var(--line);
+}
+.hero::after{background:#FF8FB1;border:3px solid #000;right:-30px;top:-30px}
+.hero h1,.hero p,.hero .bal,.hero .bal b{color:#000}
+.hero p{opacity:1;font-weight:600}
+.hero .bal{opacity:1}
+.hero-cta{background:#000;color:#FFD23F;border:3px solid #000;box-shadow:4px 4px 0 #FF3D7F;border-radius:12px}
+
+/* Kartu, panel, dan daftar */
+.list,.panel,.feat,.stat,.menu,.faq details,.guest-box{
+  background:var(--surface);
+  border:3px solid var(--line);
+  border-radius:var(--nb-radius);
+  box-shadow:var(--shadow);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+.list{overflow:hidden}
+.svc{border-top:3px solid var(--line)}
+.svc:hover,.svc.selected{background:#FFE9A8;color:#000}
+.svc:hover .price,.svc.selected .price{color:#000}
+.svc .price{font-weight:900}
+.svc.selected .price{color:var(--accent)}
+.svc .name small{color:var(--muted)}
+.ico{background:#fff;border:2px solid var(--line);border-radius:10px;box-shadow:2px 2px 0 var(--line)}
+[data-theme="dark"] .ico{background:#fff}
+.ico .init{color:#000}
+.section-head h2{font-weight:900;text-transform:none}
+.section-head span{color:var(--muted);font-weight:700}
+
+/* Modal */
+.overlay{background:rgba(0,0,0,.6);backdrop-filter:none;-webkit-backdrop-filter:none}
+.modal{
+  background:var(--modal);border:3px solid var(--line);border-radius:20px;
+  box-shadow:8px 8px 0 var(--line);
+}
+.modal-head h3{font-weight:900}
+.modal .kv,.num-box,.invoice{
+  background:#FFF6DB;border:2px solid var(--line);border-radius:12px;color:#000;
+}
+[data-theme="dark"] .modal .kv,[data-theme="dark"] .num-box,[data-theme="dark"] .invoice{background:#24242E;color:var(--ink)}
+.num{font-weight:900}
+
+/* Tombol */
+.btn{
+  background:#FFD23F;color:#000;border:3px solid var(--line);border-radius:12px;
+  box-shadow:4px 4px 0 var(--line);font-weight:900;
+  transition:transform .08s ease, box-shadow .08s ease;
+}
+.btn:hover{filter:none;transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--line)}
+.btn.ghost{background:#FFFFFF;color:#000;box-shadow:4px 4px 0 var(--line)}
+[data-theme="dark"] .btn.ghost{background:#2B2B36;color:var(--ink)}
+.btn.danger{background:#FF5C5C;color:#000;box-shadow:4px 4px 0 var(--line)}
+.btn.sm{border-width:2px;box-shadow:3px 3px 0 var(--line)}
+.btn-row .btn{flex:1}
+.lp-final .btn{background:#fff;color:#000;box-shadow:4px 4px 0 #000}
+
+/* Input & chip */
+.input{background:#fff;border:3px solid var(--line);border-radius:12px;box-shadow:3px 3px 0 var(--line);color:#000}
+[data-theme="dark"] .input{background:#24242E;color:var(--ink)}
+.input:focus{border-color:var(--accent);box-shadow:3px 3px 0 var(--accent);outline:none}
+.qchip{background:#fff;color:#000;border:2px solid var(--line);border-radius:999px;box-shadow:2px 2px 0 var(--line);font-weight:800}
+[data-theme="dark"] .qchip{background:#24242E;color:var(--ink)}
+.qchip.on{background:#FF8FB1;color:#000;border-color:var(--line);box-shadow:3px 3px 0 var(--line)}
+.svc-search .material-symbols-rounded{color:#000}
+[data-theme="dark"] .svc-search .material-symbols-rounded{color:var(--ink)}
+
+/* Badge status */
+.badge{border:2px solid var(--line);border-radius:999px;font-weight:900;color:#000;box-shadow:2px 2px 0 var(--line)}
+.badge.ok{background:#7BF1B3}
+.badge.pending{background:#FFD23F}
+.badge.bad{background:#FF8FB1}
+.badge.wait{background:#9EC5FF}
+.badge::before{background:#000}
+
+/* Navbar bawah */
+nav.bottom{background:var(--nav);border-top:3px solid var(--line);box-shadow:none}
+.nav-item{color:var(--ink);font-weight:900}
+.nav-item.active{color:var(--ink)}
+.nav-item .pill{border:2px solid transparent;border-radius:12px}
+.nav-item.active .pill{background:#FFD23F;color:#000;border-color:var(--line);box-shadow:3px 3px 0 var(--line)}
+.nav-item.active .pill .material-symbols-rounded{color:#000}
+
+/* Landing */
+.lp-hero h1{background:none;color:var(--ink);-webkit-background-clip:initial;background-clip:initial;font-weight:900;letter-spacing:-.03em}
+.lp-hero p{color:var(--ink);font-weight:600}
+.lp-skip{color:var(--ink);text-decoration:none;border-bottom:3px solid #FF3D7F;padding-bottom:2px}
+.lp-sec h2{font-weight:900}
+.feat > .material-symbols-rounded{background:#FFD23F;color:#000;border:2px solid var(--line);border-radius:10px;box-shadow:2px 2px 0 var(--line)}
+.faq summary{font-weight:900}
+.faq details[open]{box-shadow:var(--shadow)}
+.lp-final{background:#FF8FB1;color:#000;border:3px solid var(--line);border-radius:20px;box-shadow:8px 8px 0 var(--line)}
+.lp-final p{opacity:1;font-weight:600}
+.lp-final h2{font-weight:900}
+.lp-foot{color:var(--ink);font-weight:700}
+
+/* Lain-lain */
+.toast{background:#000;color:#FFD23F;border:3px solid #000;border-radius:12px;box-shadow:4px 4px 0 #FF3D7F}
+.spinner{border:4px solid #000;border-top-color:#FF3D7F}
+.country-btn{background:#fff;border:3px solid var(--line);border-radius:var(--nb-radius);box-shadow:var(--shadow)}
+[data-theme="dark"] .country-btn{background:var(--surface)}
+.c-list{background:#FFF6DB;border:2px solid var(--line);border-radius:12px}
+[data-theme="dark"] .c-list{background:#24242E}
+.prov-box small{color:var(--ink)}
+.qris-box{border:3px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.zoom-stage img{border:3px solid #000}
+.empty{color:var(--ink)}
+
+/* =====================================================
+   TEMA WARNA: PINK AESTHETIC (gaya neobrutalism tetap)
+   ===================================================== */
+:root{
+  --bg:#FFF0F6;
+  --surface:#FFFFFF;
+  --modal:#FFFFFF;
+  --surface-2:#FFE0EE;
+  --ink:#2B0A1E;
+  --muted:#7A4A62;
+  --line:#2B0A1E;
+  --accent:#FF4D8D;
+  --nav:#FFFFFF;
+  --grad:#FFB3D1;
+}
+[data-theme="dark"]{
+  --bg:#1E0F1A;
+  --surface:#2A1624;
+  --modal:#2A1624;
+  --surface-2:#3B1F33;
+  --ink:#FFE6F2;
+  --muted:#D7A6C0;
+  --line:#FFD6E8;
+  --accent:#FF7AB0;
+  --accent-ink:#1E0F1A;
+  --nav:#2A1624;
+  --grad:#FF9EC7;
+}
+
+body{background:var(--bg)}
+header{background:var(--bg)}
+.brand-mark{background:#FFB3D1}
+.hero{background:#FFB3D1}
+.hero::after{background:#FF9EC7}
+.hero-cta{color:#FF4D8D;box-shadow:4px 4px 0 #2B0A1E}
+[data-theme="dark"] .hero-cta{color:#FF4D8D;background:#FFE6F2}
+.hero-cta{background:#FFFFFF}
+.svc:hover,.svc.selected{background:#FFE0EE}
+.svc.selected .price{color:var(--accent)}
+.ico .init{color:#2B0A1E}
+.modal .kv,.num-box,.invoice,.c-list{background:#FFF0F6}
+[data-theme="dark"] .modal .kv,[data-theme="dark"] .num-box,[data-theme="dark"] .invoice,[data-theme="dark"] .c-list{background:#3B1F33}
+.btn{background:#FFB3D1;color:#2B0A1E}
+.btn.ghost{background:#FFFFFF;color:#2B0A1E}
+[data-theme="dark"] .btn.ghost{background:#3B1F33;color:var(--ink)}
+.btn.danger{background:#FF5C8A;color:#2B0A1E}
+.lp-final{background:#FF9EC7;color:#2B0A1E}
+.lp-final .btn{background:#FFFFFF;color:#2B0A1E;box-shadow:4px 4px 0 #2B0A1E}
+.lp-skip{border-bottom-color:#FF4D8D}
+.input:focus{box-shadow:3px 3px 0 #FF4D8D}
+[data-theme="dark"] .input,[data-theme="dark"] .qchip,[data-theme="dark"] .country-btn{background:#3B1F33;color:var(--ink)}
+[data-theme="dark"] .country-btn{background:var(--surface)}
+.qchip.on{background:#FF9EC7;color:#2B0A1E}
+.badge.pending{background:#FFB3D1}
+.badge.wait{background:#D9C8FF}
+.badge.bad{background:#FF9EC7}
+.nav-item.active .pill{background:#FFB3D1;color:#2B0A1E}
+.nav-item.active .pill .material-symbols-rounded{color:#2B0A1E}
+.feat > .material-symbols-rounded{background:#FFB3D1;color:#2B0A1E}
+.toast{background:#2B0A1E;color:#FFB3D1;border-color:#2B0A1E;box-shadow:4px 4px 0 #FF4D8D}
+.spinner{border-color:#2B0A1E;border-top-color:#FF4D8D}
+.zoom-stage img{border-color:#2B0A1E}
+
+/* =====================================================
+   PILIHAN SERVER GAYA SWIPE
+   ===================================================== */
+.srv-wrap{margin-bottom:14px}
+.srv-track{
+  display:flex;gap:10px;overflow-x:auto;
+  scroll-snap-type:x mandatory;scroll-behavior:auto;
+  padding:4px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  touch-action:pan-x;cursor:grab;
+}
+.srv-track::-webkit-scrollbar{display:none}
+.srv-track.drag{cursor:grabbing;scroll-snap-type:none;user-select:none}
+.srv-card{
+  flex:0 0 78%;scroll-snap-align:center;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  text-align:left;padding:14px 16px;border-radius:16px;
+  background:var(--surface);border:3px solid var(--line);box-shadow:var(--shadow);
+  transition:transform .15s ease, background .15s ease;
+}
+.srv-card:active{transform:scale(.98)}
+.srv-card.on{background:var(--grad);color:#2B0A1E}
+.srv-tag{font-size:12px;font-weight:900;letter-spacing:.02em}
+.srv-card b{font-family:"Bricolage Grotesque";font-size:18px;font-weight:900}
+.srv-card small{color:var(--muted);font-weight:700;font-size:13px}
+.srv-card.on small{color:#2B0A1E}
+.srv-dots{display:flex;justify-content:center;gap:8px;margin-top:4px}
+.srv-dots i{width:8px;height:8px;border-radius:99px;background:var(--line);opacity:.25;transition:width .2s ease, opacity .2s ease}
+.srv-dots i.on{width:22px;opacity:1}
+.srv-card:hover{transform:translateY(-2px)}
+
+/* Modal login & daftar tampil di tengah layar (semua ukuran layar) */
+.overlay:has(.auth-tabs),
+.overlay:has(.loading){align-items:center}
+
+/* =====================================================
+   MASKOT NOKKI (pemandu pengunjung & pengguna baru)
+   ===================================================== */
+#mascot{
+  position:fixed;left:12px;bottom:18px;z-index:26;
+  width:84px;height:84px;padding:0;border:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+body.in-app #mascot{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#mascot svg{width:100%;height:100%;overflow:visible;display:block}
+#mascot:focus-visible{outline:3px solid #FF4D8D;outline-offset:4px;border-radius:16px}
+.m-body{animation:mBob 3s ease-in-out infinite}
+#mascot.talk .m-body{animation-duration:.7s}
+@keyframes mBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.m-eye{transform-box:fill-box;transform-origin:center;animation:mBlink 4.2s infinite}
+@keyframes mBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.m-arm{transform-box:view-box;transform-origin:96px 62px;animation:mWave 1.8s ease-in-out infinite}
+#mascot.talk .m-arm{animation-duration:.6s}
+@keyframes mWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-24deg)}}
+
+#mascot-bubble{
+  position:fixed;left:102px;bottom:40px;z-index:26;max-width:min(270px,64vw);
+  background:#FFFFFF;color:#2B0A1E;border:3px solid #2B0A1E;border-radius:16px 16px 16px 4px;
+  box-shadow:4px 4px 0 #2B0A1E;padding:12px 14px;font-weight:700;font-size:14px;line-height:1.5;
+  opacity:0;transform:translateY(8px) scale(.96);transform-origin:left bottom;
+  transition:opacity .25s ease, transform .25s ease;pointer-events:none;
+}
+#mascot-bubble.show{opacity:1;transform:none;pointer-events:auto}
+body.in-app #mascot-bubble{bottom:calc(106px + env(safe-area-inset-bottom,0px))}
+.mb-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mb-actions button{
+  font-size:13px;font-weight:900;padding:7px 11px;border:2px solid #2B0A1E;border-radius:10px;
+  background:#FFB3D1;color:#2B0A1E;box-shadow:2px 2px 0 #2B0A1E;
+}
+
+.guide-step{
+  display:flex;gap:12px;align-items:flex-start;padding:12px;margin-bottom:10px;
+  background:var(--surface-2);border:2px solid var(--line);border-radius:14px;
+}
+.gs-no{
+  flex:none;width:34px;height:34px;border-radius:10px;background:#FFB3D1;color:#2B0A1E;
+  border:2px solid var(--line);box-shadow:2px 2px 0 var(--line);
+  display:grid;place-items:center;font-family:"Bricolage Grotesque",sans-serif;font-weight:900;
+}
+.guide-step b{display:block;font-size:15px;color:var(--ink)}
+.guide-step p{font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+
+/* =====================================================
+   ANIMASI (website terasa hidup)
+   Semua animasi otomatis dimatikan jika pengguna
+   mengaktifkan "kurangi gerakan" di perangkatnya.
+   ===================================================== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(6deg)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes pulseDot{50%{opacity:.25}}
+
+/* Landing: masuk bertahap saat halaman dibuka */
+#landing .lp-top{animation:fadeUp .6s ease both}
+#landing .lp-hero > *:not(.deco){animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) both}
+#landing .lp-hero > *:nth-child(2){animation-delay:.08s}
+#landing .lp-hero > *:nth-child(3){animation-delay:.16s}
+#landing .lp-hero > *:nth-child(4){animation-delay:.24s}
+#landing .lp-hero > *:nth-child(5){animation-delay:.32s}
+
+/* Hiasan melayang di hero */
+.lp-hero{position:relative}
+.lp-hero .deco{position:absolute;border:3px solid var(--line);pointer-events:none;z-index:0;animation:floaty 7s ease-in-out infinite}
+.lp-hero .deco.d1{width:96px;height:96px;border-radius:50%;background:#FF9EC7;right:6%;top:4px}
+.lp-hero .deco.d2{width:58px;height:58px;border-radius:14px;background:#FFE0EE;left:-4px;bottom:24px;animation-delay:-3s}
+.lp-hero > *:not(.deco){position:relative;z-index:1}
+
+/* Marquee nama layanan */
+.marquee{overflow:hidden;white-space:nowrap;background:#FFB3D1;border-top:3px solid var(--line);border-bottom:3px solid var(--line);margin:18px 0}
+.marquee-track{display:inline-flex;animation:marquee 30s linear infinite;padding:10px 0;font-family:"Bricolage Grotesque",sans-serif;font-weight:900;font-size:18px;color:#2B0A1E}
+.marquee-track span{padding-right:14px}
+
+/* Reveal saat scroll */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* Detail kecil */
+.brand-mark{animation:wiggle 5s ease-in-out infinite}
+.nav-item.active .pill{animation:pop .4s ease}
+.badge.pending::before{animation:pulseDot 1.2s ease-in-out infinite}
+.num{animation:fadeUp .5s .1s both}
+.hero-cta:hover{transform:translate(-2px,-2px)}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+}
+@media (min-width: 900px){
+  .srv-card{flex-basis:calc(50% - 5px)}
+}
+
+/* Desktop / tablet: tata letak lebih lebar */
+@media (min-width: 640px){
+  .lp-hero h1{font-size:clamp(40px, 6vw, 60px)}
+}
+@media (min-width: 900px){
+  .wrap{max-width:1040px}
+  .lp-sec{max-width:1040px;margin:0 auto}
+  .lp-final{max-width:1040px;margin:4px auto 26px}
+  .lp-foot{max-width:1040px;margin:0 auto}
+  .lp-hero{max-width:1040px}
+  .lp-top{max-width:1040px}
+  nav.bottom .row{max-width:620px}
+  .feat-grid{grid-template-columns:repeat(3,1fr)}
+  .faq{grid-template-columns:1fr 1fr;align-items:start}
+  .hero{padding:36px 40px}
+  .hero h1{font-size:44px}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  #home-services,#order-services{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+    background:none;box-shadow:none;border:0;overflow:visible;
+  }
+  #home-services .svc,#order-services .svc{
+    background:var(--surface);border:1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    border-radius:18px;box-shadow:var(--shadow);border:3px solid var(--line);
+  }
+  #home-services .svc:hover,#order-services .svc:hover{transform:translateY(-2px)}
+  .section-head h2,.lp-sec h2{font-size:26px}
+}
+
+/* ========== PEMILIH NEGARA ========== */
+.flag{font-size:24px;width:38px;text-align:center;flex:none;line-height:1}
+.country-btn{
+  width:100%;display:flex;align-items:center;gap:12px;background:var(--surface);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:14px;text-align:left;
+}
+.country-btn small{display:block;color:var(--muted);font-size:12.5px;font-weight:700}
+.country-btn b{font-size:15.5px}
+.country-btn .flag{font-size:26px}
+.country-btn > .material-symbols-rounded{margin-left:auto;color:var(--muted)}
+.c-count{font-size:12.5px;color:var(--muted);margin:0 2px 8px;font-weight:700}
+.c-list{max-height:44vh;overflow:auto;border-radius:14px;background:var(--bg);padding:4px}
+.c-list .svc{background:transparent;border-top:0;border-radius:12px}
+.c-list .svc:hover{background:var(--surface)}
+.c-list .svc.selected{background:var(--surface)}
+.c-list .name{font-size:14.5px}
+.c-list .svc .material-symbols-rounded{font-size:22px}
+
+/* ========== FILTER LAYANAN ========== */
+.svc-search{position:relative;margin-bottom:10px}
+.svc-search .material-symbols-rounded{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:20px;pointer-events:none}
+.svc-search .input{padding-left:44px}
+.svc-chips{margin-bottom:12px}
+
+/* ========== QRIS & ZOOM ========== */
+.qris-box{background:#fff;border-radius:16px;padding:14px;text-align:center;cursor:zoom-in;margin:12px 0}
+.qris-img{width:100%;max-width:260px;margin:0 auto;border-radius:10px;display:block}
+.qris-box small{display:flex;justify-content:center;align-items:center;gap:4px;color:#475569;margin-top:10px;font-size:12.5px;font-weight:700}
+.qris-box small .material-symbols-rounded{font-size:18px}
+.qris-miss{padding:40px 10px;color:#475569;font-weight:700}
+.zoom{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.92);display:none;flex-direction:column}
+.zoom.show{display:flex}
+.zoom-bar{display:flex;gap:10px;justify-content:center;padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
+.zoom-bar button{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
+.zoom-stage{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none}
+.zoom-stage img{max-width:92vw;max-height:78vh;background:#fff;border-radius:14px;padding:12px;user-select:none;-webkit-user-drag:none;transition:transform .08s linear}
+
+/* ========== INVOICE ========== */
+.invoice{background:var(--bg);border-radius:16px;padding:16px}
+.inv-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.inv-meta small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.inv-meta b{font-size:14px;word-break:break-all}
+.inv-total{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:12px;margin-top:12px;font-weight:700}
+.inv-total b{font-family:"Bricolage Grotesque";font-size:22px}
+.inv-foot{text-align:center;margin-top:12px;font-size:12.5px;color:var(--muted)}
+@media print{
+  body *{visibility:hidden!important}
+  #inv-print, #inv-print *{visibility:visible!important}
+  #inv-print{position:absolute;left:0;top:0;width:100%;background:#fff!important;color:#000!important;border-radius:0}
+  .overlay{position:absolute;background:none!important;backdrop-filter:none}
+  .modal{box-shadow:none!important;max-height:none!important;overflow:visible!important;background:#fff!important;color:#000!important}
+  .modal-head,.modal .actions{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== LANDING PAGE ========== -->
+<div id="landing">
+  <div class="wrap lp-top">
+    <div class="brand">
+      <div class="brand-mark"><span class="material-symbols-rounded">sim_card</span></div>
+      <span class="display">NokosStore</span>
+    </div>
+    <div class="top-actions">
+      <button class="chip" onclick="openAuth('login')">Masuk</button>
+      <button class="chip" style="background:var(--accent);color:var(--accent-ink)" onclick="openAuth('register')">Daftar</button>
+    </div>
+  </div>
+
+  <section class="wrap lp-hero">
+    <span class="deco d1" aria-hidden="true"></span>
+    <span class="deco d2" aria-hidden="true"></span>
+    <h1 class="display">Nomor OTP untuk verifikasi, tanpa ribet</h1>
+    <p>Beli nomor virtual untuk WhatsApp, Telegram, Shopee, Tokopedia, dan layanan lainnya. Harga mulai Rp 1.500.</p>
+    <div class="lp-cta">
+      <button class="btn" onclick="openAuth('register')">
+        <span class="material-symbols-rounded">person_add</span> Daftar gratis
+      </button>
+      <button class="btn ghost" onclick="openAuth('login')">
+        <span class="material-symbols-rounded">login</span> Saya sudah punya akun
+      </button>
+    </div>
+    <button class="lp-skip" onclick="enterApp()">Lihat-lihat layanan dulu</button>
+  </section>
+
+  <section class="lp-sec">
+    <h2 class="display">Kenapa NokosStore?</h2>
+    <div class="feat-grid">
+      <div class="feat">
+        <span class="material-symbols-rounded">bolt</span>
+        <div><b>Order langsung diproses</b><p>Pembelian memotong saldo dan nomor langsung tampil di riwayat order.</p></div>
+      </div>
+      <div class="feat">
+        <span class="material-symbols-rounded">sell</span>
+        <div><b>Harga transparan</b><p>Harga setiap layanan ditampilkan sejak awal, mulai Rp 1.500.</p></div>
+      </div>
+      <div class="feat">
+        <span class="material-symbols-rounded">receipt_long</span>
+        <div><b>Riwayat tercatat</b><p>Setiap deposit dan order tersimpan di akun kamu.</p></div>
+      </div>
+      <div class="feat">
+        <span class="material-symbols-rounded">verified_user</span>
+        <div><b>Deposit otomatis</b><p>Saldo masuk otomatis setelah melakukan deposit.</p></div>
+      </div>
+      <div class="feat">
+        <span class="material-symbols-rounded">support_agent</span>
+        <div><b>Aduan mudah</b><p>Sampaikan aduan langsung ke admin lewat WhatsApp dari menu Profil.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-sec">
+    <h2 class="display">Pertanyaan umum</h2>
+    <div class="faq">
+      <details open>
+        <summary>Apakah harus daftar dulu?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Tidak perlu untuk melihat layanan. Namun untuk membeli nomor dan deposit saldo, kamu harus masuk atau daftar terlebih dahulu.</p>
+      </details>
+      <details>
+        <summary>Berapa minimal deposit?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Minimal deposit adalah Rp 15.000.</p>
+      </details>
+      <details>
+        <summary>Kapan saldo masuk setelah transfer?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Deposit berstatus pending. Saldo akan masuk setelah admin mengonfirmasi pembayaran QRIS kamu.</p>
+      </details>
+      <details>
+        <summary>Bagaimana jika OTP tidak masuk?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Buka riwayat order lalu pilih Batalkan. Saldo sebesar harga nomor akan dikembalikan ke akun kamu.</p>
+      </details>
+      <details>
+        <summary>Apakah password saya aman?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Password tidak disimpan dalam bentuk teks biasa, melainkan dalam bentuk hash.</p>
+      </details>
+      <details>
+        <summary>Bagaimana cara menghubungi CS?<span class="material-symbols-rounded">expand_more</span></summary>
+        <p>Buka menu Profil lalu pilih Hubungi CS. Admin akan membalas lewat WhatsApp.</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="lp-final">
+      <h2 class="display">Siap mulai verifikasi?</h2>
+      <p>Daftar dalam hitungan detik, lalu isi saldo dan beli nomor.</p>
+      <button class="btn" onclick="openAuth('register')">Daftar sekarang</button>
+    </div>
+    <div class="lp-foot">© 2026 NokosStore</div>
+  </section>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="app-only">
+  <div class="wrap top">
+    <div class="brand" style="cursor:pointer" onclick="showLanding()">
+      <div class="brand-mark"><span class="material-symbols-rounded">sim_card</span></div>
+      <span class="display">NokosStore</span>
+    </div>
+    <div class="top-actions">
+      <button class="chip" id="hdr-login" onclick="openAuth('login')" style="display:none"><span class="material-symbols-rounded">login</span>Masuk</button>
+      <button class="chip" onclick="go('deposit')" aria-label="Saldo">
+        <span class="material-symbols-rounded">account_balance_wallet</span>
+        <span id="hdr-balance">Rp 0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap app-only">
+
+  <!-- ========== BERANDA ========== -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <h1 class="display">Nomor OTP<br>mulai Rp 1.500</h1>
+      <p>Verifikasi WhatsApp, Telegram, Shopee, dan layanan lain tanpa ribet.</p>
+      <div class="bal">Saldo kamu<b id="home-balance">Rp 0</b></div>
+      <button class="hero-cta" onclick="go('deposit')">
+        <span class="material-symbols-rounded">add_card</span> Isi saldo
+      </button>
+    </div>
+
+    <div class="section-head">
+      <h2 class="display">Layanan populer</h2>
+      <span>Harga per nomor</span>
+    </div>
+    <div class="svc-search">
+      <span class="material-symbols-rounded">search</span>
+      <input class="input" id="svc-q" placeholder="Cari layanan, misal: ChatGPT" autocomplete="off" oninput="setSvcQuery(this.value)">
+    </div>
+    <div class="chips svc-chips" id="svc-chips"></div>
+    <div class="srv-wrap" id="svc-server"></div>
+    <div class="list" id="home-services"></div>
+  </section>
+
+  <!-- ========== ORDER ========== -->
+  <section class="page" id="page-order">
+    <div class="section-head" style="margin-top:6px">
+      <h2 class="display">Beli nomor</h2>
+    </div>
+    <button class="country-btn" id="order-country" onclick="openCountryPicker(null)"></button>
+    <div class="svc-search">
+      <span class="material-symbols-rounded">search</span>
+      <input class="input" id="svc-q2" placeholder="Cari layanan, misal: ChatGPT" autocomplete="off" oninput="setSvcQuery(this.value)">
+    </div>
+    <div class="chips svc-chips" id="svc-chips2"></div>
+    <div class="srv-wrap" id="svc-server2"></div>
+    <div class="list" id="order-services" style="margin-bottom:14px"></div>
+
+    <div class="panel">
+      <div class="summary">
+        <span id="order-svc-name">Pilih layanan</span>
+        <b id="order-price">Rp 0</b>
+      </div>
+      <button class="btn" onclick="askBuy()">
+        <span class="material-symbols-rounded">shopping_bag</span> Beli nomor
+      </button>
+    </div>
+
+    <div class="hist">
+      <div class="section-head"><h2 class="display">Riwayat order</h2></div>
+      <div class="list" id="order-history"></div>
+    </div>
+  </section>
+
+  <!-- ========== DEPOSIT ========== -->
+  <section class="page" id="page-deposit">
+    <div class="section-head" style="margin-top:6px">
+      <h2 class="display">Deposit saldo</h2>
+    </div>
+    <div class="panel">
+      <div class="field">
+        <label for="dep-amount">Nominal deposit (minimal Rp 15.000)</label>
+        <input class="input" id="dep-amount" type="number" inputmode="numeric" min="15000" placeholder="15000">
+      </div>
+      <div class="chips">
+        <button class="qchip" onclick="setDep(15000,this)">15.000</button>
+        <button class="qchip" onclick="setDep(25000,this)">25.000</button>
+        <button class="qchip" onclick="setDep(50000,this)">50.000</button>
+        <button class="qchip" onclick="setDep(100000,this)">100.000</button>
+      </div>
+      <p style="margin-bottom:14px;font-weight:700;display:flex;align-items:center;gap:6px"><span class="material-symbols-rounded" style="color:var(--accent)">qr_code_2</span> Pembayaran via QRIS</p>
+      <button class="btn" onclick="createDeposit()">
+        <span class="material-symbols-rounded">send_money</span> Buat deposit
+      </button>
+      <p style="font-size:12.5px;margin-top:12px">Saldo masuk setelah admin mengonfirmasi pembayaran melalui bot Telegram.</p>
+    </div>
+
+    <div class="hist">
+      <div class="section-head"><h2 class="display">Riwayat deposit</h2></div>
+      <div class="list" id="dep-history"></div>
+    </div>
+  </section>
+
+  <!-- ========== RIWAYAT ORDER ========== -->
+  <section class="page" id="page-history">
+    <div class="section-head" style="margin-top:6px">
+      <h2 class="display">Riwayat order</h2>
+      <span>Nomor yang kamu beli</span>
+    </div>
+    <div class="list" id="hist-orders"></div>
+  </section>
+
+  <!-- ========== PROFIL ========== -->
+  <section class="page" id="page-profile">
+    <div class="panel guest-box" id="p-guest" style="display:none">
+      <span class="material-symbols-rounded">account_circle</span>
+      <h3>Kamu belum masuk</h3>
+      <p>Masuk atau daftar untuk membeli nomor, deposit saldo, dan melihat riwayat akun.</p>
+      <div class="btn-row">
+        <button class="btn ghost" onclick="openAuth('login')">Masuk</button>
+        <button class="btn" onclick="openAuth('register')">Daftar</button>
+      </div>
+    </div>
+    <div id="p-main" style="display:none">
+    <div class="profile-head">
+      <div class="avatar" id="p-avatar">U</div>
+      <div>
+        <h1 class="display" id="p-name">Pengguna</h1>
+        <p id="p-user">@user</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><small>Saldo</small><b id="p-balance">Rp 0</b></div>
+      <div class="stat"><small>Total order</small><b id="p-orders">0</b></div>
+      <div class="stat"><small>Total deposit</small><b id="p-deps">0</b></div>
+      <div class="stat"><small>Nomor aktif</small><b id="p-active">0</b></div>
+    </div>
+
+    <div class="menu">
+      <button onclick="askEditName()"><span class="material-symbols-rounded">edit</span> Ubah nama</button>
+      <button onclick="go('order')"><span class="material-symbols-rounded">receipt_long</span> Riwayat order</button>
+      <button onclick="go('deposit')"><span class="material-symbols-rounded">history</span> Riwayat deposit</button>
+      <a href="#" onclick="openWA('Halo admin, saya butuh bantuan akun.');return false"><span class="material-symbols-rounded">support_agent</span> Hubungi CS</a>
+      <button onclick="logout()"><span class="material-symbols-rounded">logout</span> Keluar akun</button>
+      <button onclick="askReset()"><span class="material-symbols-rounded" style="color:var(--bad)">delete</span> <span style="color:var(--bad)">Hapus data lokal</span></button>
+    </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== NAVBAR BAWAH ========== -->
+<nav class="bottom app-only" aria-label="Navigasi utama">
+  <div class="row">
+    <button class="nav-item active" data-page="home" onclick="go('home')">
+      <div class="pill"><span class="material-symbols-rounded">home</span></div>Beranda
+    </button>
+    <button class="nav-item" data-page="order" onclick="go('order')">
+      <div class="pill"><span class="material-symbols-rounded">shopping_cart</span></div>Order
+    </button>
+    <button class="nav-item" data-page="deposit" onclick="go('deposit')">
+      <div class="pill"><span class="material-symbols-rounded">account_balance_wallet</span></div>Deposit
+    </button>
+    <button class="nav-item" data-page="history" onclick="go('history')">
+      <div class="pill"><span class="material-symbols-rounded">history</span></div>Riwayat
+    </button>
+    <button class="nav-item" data-page="profile" onclick="go('profile')">
+      <div class="pill"><span class="material-symbols-rounded">person</span></div>Profil
+    </button>
+  </div>
+</nav>
+
+
+<!-- ========== MASKOT NOKKI ========== -->
+<button id="mascot" aria-label="Nokki, pemandu NokosStore" onclick="mascotClick()">
+  <svg viewBox="0 0 120 120" aria-hidden="true">
+    <g class="m-body">
+      <ellipse cx="60" cy="109" rx="30" ry="5" fill="rgba(43,10,30,.18)"/>
+      <rect x="16" y="20" width="80" height="76" rx="22" fill="#FFB3D1" stroke="#2B0A1E" stroke-width="4"/>
+      <rect x="78" y="8" width="18" height="16" rx="4" fill="#FFFFFF" stroke="#2B0A1E" stroke-width="3"/>
+      <ellipse class="m-eye" cx="44" cy="54" rx="6" ry="8" fill="#2B0A1E"/>
+      <ellipse class="m-eye" cx="76" cy="54" rx="6" ry="8" fill="#2B0A1E"/>
+      <circle cx="30" cy="68" r="5" fill="#FF4D8D" opacity=".55"/>
+      <circle cx="90" cy="68" r="5" fill="#FF4D8D" opacity=".55"/>
+      <path d="M50 70 Q60 80 70 70" stroke="#2B0A1E" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <rect x="30" y="94" width="14" height="10" rx="4" fill="#2B0A1E"/>
+      <rect x="76" y="94" width="14" height="10" rx="4" fill="#2B0A1E"/>
+    </g>
+    <g class="m-arm">
+      <path d="M96 60 Q110 52 108 36" stroke="#2B0A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="108" cy="32" r="6" fill="#FFB3D1" stroke="#2B0A1E" stroke-width="3"/>
+    </g>
+  </svg>
+</button>
+<div id="mascot-bubble" role="status" aria-live="polite"></div>
+
+<!-- ========== MODAL ========== -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal-head">
+      <h3 id="m-title"></h3>
+      <button class="icon-btn" onclick="closeModal()" aria-label="Tutup">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div id="m-body"></div>
+  </div>
+</div>
+
+<!-- ========== ZOOM QRIS ========== -->
+<div class="zoom" id="zoom" role="dialog" aria-label="Perbesar QRIS">
+  <div class="zoom-bar">
+    <button onclick="zoomBy(0.25)" aria-label="Perbesar"><span class="material-symbols-rounded">zoom_in</span></button>
+    <button onclick="zoomBy(-0.25)" aria-label="Perkecil"><span class="material-symbols-rounded">zoom_out</span></button>
+    <button onclick="zoomReset()" aria-label="Reset"><span class="material-symbols-rounded">restart_alt</span></button>
+    <button onclick="closeZoom()" aria-label="Tutup"><span class="material-symbols-rounded">close</span></button>
+  </div>
+  <div class="zoom-stage" id="zoom-stage"><img id="zoom-img" alt="QRIS"></div>
+</div>
+
+<!-- ========== TOAST ========== -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================
+   KONFIGURASI — ganti sesuai toko kamu
+   ===================================================== */
+const CFG = {
+  BOT_USERNAME: 'NamaBotAdminAnda',  // username bot Telegram admin tanpa @
+  WA_CS: '212727467861',            // nomor WA CS format 62...
+  MIN_DEPOSIT: 15000,
+  // Link gambar QRIS (URL lengkap atau nama file di folder yang sama, mis. 'qris.png')
+  QRIS_URL: 'qris.png'
+};
+
+/* Layanan. brand = slug Simple Icons (ikon asli merek).
+   img = dipakai jika brand tidak tersedia (mis. Kopi Kenangan) */
+/* logo: (opsional) path ke file icon asli aplikasi, mis. 'icons/whatsapp.png'.
+   Jika diisi, logo ini dipakai. Jika tidak, logo merek resmi diambil otomatis. */
+const SERVICES = [
+  /* Populer (harga dasar Indonesia) */
+  { id:'wa', name:'WhatsApp',      price:1500,  cat:'sosmed', pop:true, brand:'whatsapp',     color:'#25D366' },
+  { id:'tg', name:'Telegram',      price:1700,  cat:'sosmed', pop:true, brand:'telegram',     color:'#26A5E4' },
+  { id:'tt', name:'TikTok',        price:2500,  cat:'sosmed', pop:true, brand:'tiktok',       color:'currentColor' },
+  { id:'sp', name:'Shopee',        price:2000,  cat:'ecom',   pop:true, brand:'shopee',       color:'#EE4D2D' },
+  { id:'ig', name:'Instagram',     price:2500,  cat:'sosmed', pop:true, brand:'instagram',    color:'#E4405F' },
+  { id:'fb', name:'Facebook',      price:2500,  cat:'sosmed', pop:true, brand:'facebook',     color:'#0866FF' },
+  { id:'oa', name:'ChatGPT',       price:9000,  cat:'ai',     pop:true, brand:'openai',       color:'#10A37F' },
+  { id:'tp', name:'Tokopedia',     price:2200,  cat:'ecom',   pop:true, brand:'tokopedia',    color:'#42B549' },
+  /* Sosial media */
+  { id:'dc', name:'Discord',       price:2600,  cat:'sosmed', brand:'discord',      color:'#5865F2' },
+  { id:'x',  name:'X (Twitter)',   price:2300,  cat:'sosmed', brand:'x',            color:'currentColor' },
+  { id:'sc', name:'Snapchat',      price:2400,  cat:'sosmed', brand:'snapchat',     color:'#F5C400' },
+  { id:'li', name:'LinkedIn',      price:2800,  cat:'sosmed', brand:'linkedin',     color:'#0A66C2' },
+  { id:'yt', name:'YouTube',       price:3000,  cat:'sosmed', brand:'youtube',      color:'#FF0000' },
+  { id:'th', name:'Threads',       price:2300,  cat:'sosmed', brand:'threads',      color:'currentColor' },
+  { id:'rd', name:'Reddit',        price:2800,  cat:'sosmed', brand:'reddit',       color:'#FF4500' },
+  { id:'pin',name:'Pinterest',     price:2500,  cat:'sosmed', brand:'pinterest',    color:'#E60023' },
+  { id:'ln', name:'LINE',          price:2000,  cat:'sosmed', brand:'line',         color:'#06C755' },
+  /* E-commerce */
+  { id:'lz', name:'Lazada',        price:2100,  cat:'ecom',   brand:'lazada',       color:'#0F146D' },
+  /* AI */
+  { id:'gm', name:'Gemini',        price:6000,  cat:'ai',     brand:'googlegemini', color:'#4285F4' },
+  { id:'cl', name:'Claude',        price:12000, cat:'ai',     brand:'anthropic',    color:'#D97757' },
+  { id:'px', name:'Perplexity',    price:7000,  cat:'ai',     brand:'perplexity',   color:'#20808D' },
+  { id:'ds', name:'DeepSeek',      price:5000,  cat:'ai',     brand:'deepseek',     color:'#4D6BFE' },
+  { id:'mj', name:'Midjourney',    price:20000, cat:'ai',     brand:'midjourney',   color:'currentColor' },
+  /* Lainnya */
+  { id:'go', name:'Google',        price:4000,  cat:'lain',   brand:'google',       color:'#4285F4' },
+  { id:'sf', name:'Spotify',       price:3500,  cat:'lain',   brand:'spotify',      color:'#1DB954' },
+  { id:'gh', name:'GitHub',        price:6500,  cat:'lain',   brand:'github',       color:'currentColor' },
+  { id:'ms', name:'Microsoft',     price:3500,  cat:'lain',   brand:'microsoft',    color:'#00A4EF' },
+  { id:'kk', name:'Kopi Kenangan', price:4500,  cat:'lain',   brand:null, logo:'kopi-kenangan.png', color:'#5B3A29' }
+];
+
+/* =====================================================
+   STATE (disimpan di localStorage browser)
+   ===================================================== */
+const USERS_KEY = 'nokos_users';     // daftar akun (username -> nama + hash password)
+const SESSION_KEY = 'nokos_session'; // username yang sedang login
+let currentUser = null;              // null = tamu (belum login)
+let S = { balance:0, orders:[], deposits:[] }; // data akun aktif
+let selectedSvc = 'wa';
+let pendingAfter = null;             // aksi yang dilanjutkan setelah login
+let authBusy = false;                // mencegah klik daftar berulang saat loading
+
+function readUsers(){
+  try{ return JSON.parse(localStorage.getItem(USERS_KEY)) || {}; }catch(e){ return {}; }
+}
+function writeUsers(u){
+  try{ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }catch(e){}
+}
+function getUser(){
+  return currentUser ? readUsers()[currentUser] || null : null;
+}
+function loadUserData(u){
+  try{
+    const d = JSON.parse(localStorage.getItem('nokos_data_' + u));
+    if(d) return d;
+  }catch(e){}
+  return { balance:0, orders:[], deposits:[] };
+}
+function saveState(){
+  if(!currentUser) return;
+  try{ localStorage.setItem('nokos_data_' + currentUser, JSON.stringify(S)); }catch(e){}
+}
+async function sha256(str){
+  // Butuh HTTPS atau localhost agar crypto.subtle tersedia
+  try{
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+  }catch(e){
+    return 'plain:' + str;
+  }
+}
+
+/* =====================================================
+   UTILITAS
+   ===================================================== */
+const rp = n => 'Rp ' + Number(n).toLocaleString('id-ID');
+const $ = id => document.getElementById(id);
+const uid = p => p + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random()*90+10);
+const fmtDate = t => new Date(t).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const svcById = id => SERVICES.find(s => s.id === id);
+
+function svcIcon(s){
+  // Logo kustom (file png) jika diisi di data layanan
+  if(s.logo){
+    return `<div class="ico">
+      <img class="logo-img" src="${esc(s.logo)}" alt="${esc(s.name)}" onerror="this.remove()">
+      <span class="init">${esc(s.name[0])}</span>
+    </div>`;
+  }
+  // Logo merek resmi: ditampilkan sebagai mask berwarna merek, langsung dari CDN
+  const c = s.color === 'currentColor' ? 'var(--ink)' : s.color;
+  const url = `https://cdn.jsdelivr.net/npm/simple-icons@13/icons/${s.brand}.svg`;
+  return `<div class="ico" role="img" aria-label="${esc(s.name)}">
+    <i class="brand-mask" style="--c:${c};--m:url('${url}')"></i>
+  </div>`;
+}
+
+
+/* =====================================================
+   NAVIGASI & TEMA
+   ===================================================== */
+function go(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  window.scrollTo({top:0, behavior:'smooth'});
+  renderAll();
+}
+
+
+
+/* =====================================================
+   MODAL & TOAST (tanpa alert bawaan browser)
+   ===================================================== */
+function openModal(title, html){
+  $('m-title').textContent = title;
+  $('m-body').innerHTML = html;
+  $('overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  $('overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeZoom(); closeModal(); } });
+
+let toastT;
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function copyText(txt){
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Disalin ke clipboard'));
+  else toast('Salin manual: ' + txt);
+}
+
+/* =====================================================
+   RENDER
+   ===================================================== */
+function renderAll(){
+  const bal = rp(S.balance);
+  $('hdr-balance').textContent = bal;
+  $('home-balance').textContent = bal;
+  $('p-balance').textContent = bal;
+
+  // daftar layanan (beranda & order) dengan filter
+  renderServiceLists();
+  renderServerSwipe();
+
+  const sel = svcById(selectedSvc);
+  $('order-svc-name').textContent = sel.name;
+  const cty = countryOf(selectedCountry);
+  $('order-country').innerHTML = `
+    <span class="flag">${flagOf(cty.c)}</span>
+    <div><small>Negara tujuan nomor</small><b>${esc(cty.n)} (+${cty.d})</b></div>
+    <span class="material-symbols-rounded">expand_more</span>`;
+  $('order-price').textContent = rp(sel.price);
+
+  // riwayat order
+  $('order-history').innerHTML = S.orders.length ? S.orders.map(o => {
+    const st = orderStatus(o);
+    return `
+    <div class="hist-item">
+      ${svcIcon(svcById(o.service))}
+      <div class="meta">
+        <b>${esc(o.name)}${o.country ? ' · ' + flagOf(o.country) + ' ' + esc(countryName(o.country)) : ''}</b>
+        <small>${esc(o.number)} · ${fmtDate(o.date)}</small><br>
+        <span class="badge ${st.cls}">${st.label}</span>
+      </div>
+      <div style="text-align:right">
+        <div class="amt">${rp(o.price)}</div>
+        <button class="btn sm ghost small-act" onclick="showInvoice('order','${o.id}')">Invoice</button>
+        ${o.status === 'menunggu' ? `<button class="btn sm ghost small-act" onclick="checkOtp('${o.id}')">Cek OTP</button> <button class="btn sm danger small-act" onclick="cancelOrder('${o.id}')">Batalkan</button>` : ''}
+      </div>
+    </div>`;
+  }).join('') : emptyBox('receipt_long', 'Belum ada order. Pilih layanan di atas untuk mulai.');
+
+  $('hist-orders').innerHTML = $('order-history').innerHTML;
+
+  // riwayat deposit
+  $('dep-history').innerHTML = S.deposits.length ? S.deposits.map(d => {
+    const pending = d.status === 'pending';
+    return `
+    <div class="hist-item">
+      <div class="ico" style="background:var(--surface-2)">
+        <span class="material-symbols-rounded" style="color:var(--accent)">payments</span>
+      </div>
+      <div class="meta">
+        <b>${esc(d.id)}</b>
+        <small>${fmtDate(d.date)}</small><br>
+        <span class="badge ${pending ? 'pending' : 'ok'}">${pending ? 'Pending' : 'Sukses'}</span>
+      </div>
+      <div style="text-align:right">
+        <div class="amt">${rp(d.amount)}</div>
+        <button class="btn sm ghost small-act" onclick="showInvoice('dep','${d.id}')">Invoice</button>
+        ${pending ? `<button class="btn sm ghost small-act" onclick="openDepositInfo('${d.id}')">Detail</button>` : ''}
+      </div>
+    </div>`;
+  }).join('') : emptyBox('account_balance_wallet', 'Belum ada deposit.');
+
+  // profil & status login
+  const me = getUser();
+  const name = me ? me.name : 'Tamu';
+  $('p-name').textContent = name;
+  $('p-user').textContent = currentUser ? '@' + currentUser : '';
+  $('p-avatar').textContent = name.trim()[0].toUpperCase();
+  $('p-guest').style.display = currentUser ? 'none' : 'block';
+  $('p-main').style.display = currentUser ? 'block' : 'none';
+  $('hdr-login').style.display = currentUser ? 'none' : 'flex';
+  $('p-orders').textContent = S.orders.length;
+  $('p-deps').textContent = S.deposits.length;
+  $('p-active').textContent = S.orders.filter(o => o.status === 'menunggu').length;
+
+
+}
+
+function emptyBox(icon, text){
+  return `<div class="empty"><span class="material-symbols-rounded">${icon}</span>${text}</div>`;
+}
+function orderStatus(o){
+  if(o.status === 'menunggu') return {cls:'wait', label:'Menunggu OTP'};
+  if(o.status === 'sukses')   return {cls:'ok',   label:'OTP diterima'};
+  return {cls:'bad', label:'Dibatalkan / refund'};
+}
+
+/* =====================================================
+   WHATSAPP
+   ===================================================== */
+function waLink(text){
+  return `https://wa.me/${CFG.WA_CS}?text=${encodeURIComponent(text)}`;
+}
+function openWA(text){ window.open(waLink(text), '_blank', 'noopener'); }
+
+/* =====================================================
+   ORDER
+   ===================================================== */
+let previewNumber = null;   // nomor yang akan dibeli (dibuat saat layanan dipilih)
+let previewSvc = null;      // layanan yang sedang dipratinjau
+
+/* =====================================================
+   DATA NEGARA (195 negara): kode|nama|kode telepon
+   ===================================================== */
+const COUNTRY_DATA = `AF|Afganistan|93;AL|Albania|355;DZ|Aljazair|213;AD|Andorra|376;AO|Angola|244;AG|Antigua dan Barbuda|1268;AR|Argentina|54;AM|Armenia|374;AU|Australia|61;AT|Austria|43;AZ|Azerbaijan|994;BS|Bahama|1242;BH|Bahrain|973;BD|Bangladesh|880;BB|Barbados|1246;BY|Belarus|375;BE|Belgia|32;BZ|Belize|501;BJ|Benin|229;BT|Bhutan|975;BO|Bolivia|591;BA|Bosnia dan Herzegovina|387;BW|Botswana|267;BR|Brasil|55;BN|Brunei|673;BG|Bulgaria|359;BF|Burkina Faso|226;BI|Burundi|257;CV|Cabo Verde|238;KH|Kamboja|855;CM|Kamerun|237;CA|Kanada|1;CF|Republik Afrika Tengah|236;TD|Chad|235;CL|Cile|56;CN|Tiongkok|86;CO|Kolombia|57;KM|Komoros|269;CG|Kongo|242;CR|Kosta Rika|506;CI|Pantai Gading|225;HR|Kroasia|385;CU|Kuba|53;CY|Siprus|357;CZ|Ceko|420;DK|Denmark|45;DJ|Djibouti|253;DM|Dominika|1767;DO|Republik Dominika|1809;EC|Ekuador|593;EG|Mesir|20;SV|El Salvador|503;GQ|Guinea Ekuatorial|240;ER|Eritrea|291;EE|Estonia|372;SZ|Eswatini|268;ET|Etiopia|251;FJ|Fiji|679;FI|Finlandia|358;FR|Prancis|33;GA|Gabon|241;GM|Gambia|220;GE|Georgia|995;DE|Jerman|49;GH|Ghana|233;GR|Yunani|30;GD|Grenada|1473;GT|Guatemala|502;GN|Guinea|224;GW|Guinea-Bissau|245;GY|Guyana|592;HT|Haiti|509;HN|Honduras|504;HU|Hungaria|36;IS|Islandia|354;IN|India|91;ID|Indonesia|62;IR|Iran|98;IQ|Irak|964;IE|Irlandia|353;IL|Israel|972;IT|Italia|39;JM|Jamaika|1876;JP|Jepang|81;JO|Yordania|962;KZ|Kazakhstan|7;KE|Kenya|254;KI|Kiribati|686;KP|Korea Utara|850;KR|Korea Selatan|82;KW|Kuwait|965;KG|Kirgizstan|996;LA|Laos|856;LV|Latvia|371;LB|Lebanon|961;LS|Lesotho|266;LR|Liberia|231;LY|Libya|218;LI|Liechtenstein|423;LT|Lituania|370;LU|Luksemburg|352;MG|Madagaskar|261;MW|Malawi|265;MY|Malaysia|60;MV|Maladewa|960;ML|Mali|223;MT|Malta|356;MH|Kepulauan Marshall|692;MR|Mauritania|222;MU|Mauritius|230;MX|Meksiko|52;FM|Mikronesia|691;MD|Moldova|373;MC|Monako|377;MN|Mongolia|976;ME|Montenegro|382;MA|Maroko|212;MZ|Mozambik|258;MM|Myanmar|95;NA|Namibia|264;NR|Nauru|674;NP|Nepal|977;NL|Belanda|31;NZ|Selandia Baru|64;NI|Nikaragua|505;NE|Niger|227;NG|Nigeria|234;MK|Makedonia Utara|389;NO|Norwegia|47;OM|Oman|968;PK|Pakistan|92;PW|Palau|680;PA|Panama|507;PG|Papua Nugini|675;PY|Paraguay|595;PE|Peru|51;PH|Filipina|63;PL|Polandia|48;PT|Portugal|351;QA|Qatar|974;RO|Rumania|40;RU|Rusia|7;RW|Rwanda|250;KN|Saint Kitts dan Nevis|1869;LC|Saint Lucia|1758;VC|Saint Vincent dan Grenadines|1784;WS|Samoa|685;SM|San Marino|378;ST|Sao Tome dan Principe|239;SA|Arab Saudi|966;SN|Senegal|221;RS|Serbia|381;SC|Seychelles|248;SL|Sierra Leone|232;SG|Singapura|65;SK|Slovakia|421;SI|Slovenia|386;SB|Kepulauan Solomon|677;SO|Somalia|252;ZA|Afrika Selatan|27;SS|Sudan Selatan|211;ES|Spanyol|34;LK|Sri Lanka|94;SD|Sudan|249;SR|Suriname|597;SE|Swedia|46;CH|Swiss|41;SY|Suriah|963;TJ|Tajikistan|992;TZ|Tanzania|255;TH|Thailand|66;TL|Timor Leste|670;TG|Togo|228;TO|Tonga|676;TT|Trinidad dan Tobago|1868;TN|Tunisia|216;TR|Turki|90;TM|Turkmenistan|993;TV|Tuvalu|688;UG|Uganda|256;UA|Ukraina|380;AE|Uni Emirat Arab|971;GB|Britania Raya|44;US|Amerika Serikat|1;UY|Uruguay|598;UZ|Uzbekistan|998;VU|Vanuatu|678;VA|Vatikan|379;VE|Venezuela|58;VN|Vietnam|84;YE|Yaman|967;ZM|Zambia|260;ZW|Zimbabwe|263;PS|Palestina|970;TW|Taiwan|886`;
+
+const COUNTRIES = COUNTRY_DATA.split(';').map(s => s.trim()).filter(Boolean)
+  .map(s => { const [c, n, d] = s.split('|'); return { c, n, d }; })
+  .sort((a, b) => (b.c === 'ID') - (a.c === 'ID') || a.n.localeCompare(b.n, 'id'));
+
+const POPULAR = ['ID','MY','SG','PH','TH','VN','US','GB','NL','DE','FR','JP','KR','IN','SA','AE','AU','CA','BR','RU'];
+
+/* =====================================================
+   HARGA PER NEGARA
+   Harga layanan di SERVICES dianggap harga dasar (Indonesia).
+   Setiap tingkat negara punya pengali harga. Negara yang tidak
+   terdaftar di tier 1 atau tier 3 otomatis masuk tier 2.
+   Ubah 'mult' atau daftar 'codes' sesuai kebijakan harga kamu.
+   ===================================================== */
+const PRICE_MIN = 1500;   // harga OTP termurah
+const PRICE_MAX = 53000;  // harga OTP termahal
+const PRICE_TIERS = [
+  { name:'Tier 1 (termurah)', mult:1,
+    codes:['ID','PH','MY','VN','TH','IN','BD','PK','NG','KE','EG','MM','KH','LA','NP','LK'] },
+  { name:'Tier 2 (standar)', mult:1.5, codes:null },
+  { name:'Tier 3 (premium)', mult:2,
+    codes:['US','GB','CA','AU','NZ','DE','FR','NL','BE','CH','SE','NO','DK','FI','IT','ES','PT','AT','IE','JP','KR','SG','AE','SA','IL','TW'] }
+];
+function tierOf(code){
+  return PRICE_TIERS.find(t => t.codes && t.codes.includes(code)) || PRICE_TIERS[1];
+}
+/* Harga layanan untuk negara tertentu, dibulatkan ke kelipatan 10 dan dibatasi 1.500 - 53.000 */
+/* Pilihan server: setiap server punya pengali harga sendiri */
+const SERVERS = [
+  { id:'s1', name:'Server 1', label:'Harga murah',       mult:1 },
+  { id:'s2', name:'Server 2', label:'Harga sedang',      mult:1.15 },
+  { id:'s3', name:'Server 3', label:'Harga lebih mahal', mult:1.3 }
+];
+let selectedServer = 's1';
+try{
+  if(SERVERS.some(s => s.id === localStorage.getItem('nokos_server'))) selectedServer = localStorage.getItem('nokos_server');
+}catch(e){}
+const serverOf = id => SERVERS.find(s => s.id === id) || SERVERS[0];
+const serverName = id => serverOf(id).name;
+
+/* Harga layanan untuk negara dan server tertentu.
+   Dibulatkan ke kelipatan 10 dan dibatasi 1.500 - 53.000 */
+function priceFor(svc, code, server = selectedServer){
+  const p = Math.round(svc.price * tierOf(code).mult * serverOf(server).mult / 10) * 10;
+  return Math.min(PRICE_MAX, Math.max(PRICE_MIN, p));
+}
+
+/* Provider seluler Indonesia dan awalan nomornya */
+const PROVIDERS = [
+  { id:'telkomsel', name:'Telkomsel', prefixes:['811','812','813','821','822','823','852','853'] },
+  { id:'indosat',   name:'Indosat',   prefixes:['814','815','816','855','856','857','858'] },
+  { id:'axis',      name:'Axis',      prefixes:['831','832','838'] }
+];
+const providerName = id => (PROVIDERS.find(p => p.id === id) || { name: id }).name;
+let previewProvider = null; // provider yang dipilih untuk nomor Indonesia
+
+let selectedCountry = 'ID';
+try{ selectedCountry = localStorage.getItem('nokos_country') || 'ID'; }catch(e){}
+let previewCountry = null;
+
+const countryOf = code => COUNTRIES.find(x => x.c === code) || COUNTRIES[0];
+const countryName = code => countryOf(code).n;
+/* Bendera dari kode negara (emoji bendera) */
+const flagOf = code => [...code].map(ch => String.fromCodePoint(127397 + ch.charCodeAt(0))).join('');
+
+/* Buat nomor acak sesuai kode telepon negara.
+   full = nomor lengkap, masked = awalan + 2 digit terakhir terlihat */
+function genNumber(c, provider){
+  const p = provider ? PROVIDERS.find(x => x.id === provider) : null;
+  const head = p ? p.prefixes[Math.floor(Math.random() * p.prefixes.length)] : '';
+  // Indonesia: 11 digit tanpa angka 0 di depan. Negara lain: 9 digit acak.
+  const total = p ? 11 : 9;
+  let local = head;
+  while(local.length < total) local += Math.floor(Math.random() * 10);
+  const shown = head ? 4 : 2;
+  return {
+    full: '+' + c.d + ' ' + local,
+    masked: '+' + c.d + ' ' + local.slice(0, shown) + '•'.repeat(local.length - shown - 2) + local.slice(-2)
+  };
+}
+
+/* =====================================================
+   PEMILIH NEGARA (dengan filter agar layar tidak penuh)
+   ===================================================== */
+let pickerSvc = null;      // layanan yang menunggu setelah negara dipilih (null = hanya ganti negara)
+let pickerFilter = 'all';  // 'all' | 'pop'
+let pickerQuery = '';
+let pickerLimit = 20;      // tampilkan 20 negara dulu, sisanya lewat "Muat lebih banyak"
+
+function openCountryPicker(svcId){
+  pickerSvc = svcId;
+  pickerFilter = 'all';
+  pickerQuery = '';
+  pickerLimit = 20;
+  openModal('Pilih negara', `
+    <input class="input" id="c-search" placeholder="Cari negara, contoh: Indonesia atau 62"
+      autocomplete="off" oninput="pickerQuery=this.value;pickerLimit=20;renderPickerList()" style="margin-bottom:10px">
+    <div class="chips" style="margin-bottom:10px">
+      <button class="qchip on" id="f-all" onclick="setPickerFilter('all')">Semua (${COUNTRIES.length})</button>
+      <button class="qchip" id="f-pop" onclick="setPickerFilter('pop')">Populer</button>
+    </div>
+    <div class="c-count" id="c-count"></div>
+    <div class="c-list" id="c-list"></div>
+    <div class="actions">
+      <button class="btn ghost" id="c-more" onclick="pickerLimit += 20;renderPickerList()" style="display:none">Muat lebih banyak</button>
+    </div>`);
+  renderPickerList();
+}
+
+function setPickerFilter(f){
+  pickerFilter = f;
+  pickerLimit = 20;
+  $('f-all').classList.toggle('on', f === 'all');
+  $('f-pop').classList.toggle('on', f === 'pop');
+  renderPickerList();
+}
+
+function renderPickerList(){
+  let arr = COUNTRIES;
+  if(pickerFilter === 'pop') arr = arr.filter(c => POPULAR.includes(c.c));
+  const q = pickerQuery.trim().toLowerCase().replace(/^\+/, '');
+  if(q) arr = arr.filter(c => c.n.toLowerCase().includes(q) || c.c.toLowerCase() === q || c.d.startsWith(q));
+
+  const shown = arr.slice(0, pickerLimit);
+  $('c-list').innerHTML = shown.length ? shown.map(c => `
+    <button class="svc ${c.c === selectedCountry ? 'selected' : ''}" onclick="chooseCountry('${c.c}')">
+      <span class="flag">${flagOf(c.c)}</span>
+      <div class="name">${esc(c.n)}<small>+${c.d}</small></div>
+      ${pickerSvc ? `<div class="price">${rp(priceFor(svcById(pickerSvc), c.c))}</div>` : ''}
+      ${c.c === selectedCountry ? '<span class="material-symbols-rounded" style="color:var(--accent)">check_circle</span>' : ''}
+    </button>`).join('') : emptyBox('travel_explore', 'Negara tidak ditemukan. Coba kata lain.');
+  $('c-count').textContent = `Menampilkan ${shown.length} dari ${arr.length} negara`;
+  $('c-more').style.display = arr.length > pickerLimit ? 'block' : 'none';
+}
+
+function chooseCountry(code){
+  selectedCountry = code;
+  try{ localStorage.setItem('nokos_country', code); }catch(e){}
+  if(pickerSvc){
+    openPreview(pickerSvc);
+  }else{
+    closeModal();
+    renderAll();
+    toast('Negara dipilih: ' + countryName(code));
+  }
+}
+
+function pickService(id){
+  selectedSvc = id;
+  openCountryPicker(id);
+}
+
+function openPreview(id){
+  const s = svcById(id);
+  selectedSvc = id;
+  previewSvc = id;
+  const cty = countryOf(selectedCountry);
+  if(cty.c === 'ID'){
+    if(!PROVIDERS.some(p => p.id === previewProvider)) previewProvider = 'telkomsel';
+  }else{
+    previewProvider = null;
+  }
+  const g = genNumber(cty, previewProvider); // DEMO: nanti diganti nomor dari API penyedia
+  previewNumber = g.full;
+  previewCountry = cty.c;
+  openModal('Lanjutkan pembelian', `
+    <div class="prev-head">
+      ${svcIcon(s)}
+      <div><b>${esc(s.name)}</b><small>Nomor virtual untuk verifikasi</small></div>
+    </div>
+    ${cty.c === 'ID' ? providerChipsHTML() : ''}
+    <div class="num-box">
+      <small>Nomor</small>
+      <div class="num">${esc(g.masked)}</div>
+    </div>
+    <div class="kv">
+      <div><span>Negara</span><b>${flagOf(cty.c)} ${esc(cty.n)}</b></div>
+      <div><span>Server</span><b>${serverName(selectedServer)} · ${serverOf(selectedServer).label}</b></div>
+      <div><span>Status kode OTP</span><b><span class="badge ok" style="margin:0">OTP aktif</span></b></div>
+      <div><span>Harga</span><b>${rp(priceFor(s, cty.c))}</b></div>
+      <div><span>Saldo kamu</span><b>${rp(S.balance)}</b></div>
+    </div>
+    <p>Nomor lengkap dan kode OTP akan tampil setelah pembelian berhasil.</p>
+    <div class="actions">
+      <button class="btn" onclick="proceedBuy()">
+        <span class="material-symbols-rounded">shopping_bag</span> Lanjutkan pembelian
+      </button>
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+    </div>`);
+}
+
+function proceedBuy(){
+  if(!currentUser){ openAuth('login', proceedBuy); return; }
+  const s0 = svcById(previewSvc);
+  if(!s0) return;
+  const s = { ...s0, price: priceFor(s0, previewCountry || selectedCountry) };
+  if(S.balance < s.price){
+    openModal('Saldo tidak cukup', `
+      <p>Saldo kamu ${rp(S.balance)}, harga ${esc(s.name)} ${rp(s.price)}. Isi saldo dulu, lalu coba lagi.</p>
+      <div class="actions">
+        <button class="btn" onclick="closeModal();go('deposit')">
+          <span class="material-symbols-rounded">add_card</span> Deposit sekarang
+        </button>
+        <button class="btn ghost" onclick="closeModal()">Nanti saja</button>
+      </div>`);
+    return;
+  }
+  confirmBuy(s.id);
+}
+
+function askBuy(){
+  openCountryPicker(selectedSvc);
+}
+
+function randomNumber(){
+  // DEMO: ganti dengan pemanggilan API penyedia nomor virtual kamu
+  let n = '8';
+  for(let i = 0; i < 9; i++) n += Math.floor(Math.random()*10);
+  return '+62 ' + n;
+}
+
+function confirmBuy(id){
+  const s0 = svcById(id);
+  const s = { ...s0, price: priceFor(s0, previewCountry || selectedCountry) };
+  if(S.balance < s.price){ closeModal(); toast('Saldo tidak cukup'); return; }
+  S.balance -= s.price;
+  const order = {
+    id: uid('ORD'), service: s.id, name: s.name, price: s.price, country: previewCountry, provider: previewProvider, server: selectedServer,
+    number: previewNumber || randomNumber(), status: 'menunggu', date: Date.now()
+  };
+  S.orders.unshift(order);
+  previewNumber = null;
+  saveState();
+  openModal('Nomor berhasil dibeli', `
+    <p>Gunakan nomor ini untuk verifikasi ${esc(s.name)}. Kode OTP akan muncul di riwayat order.</p>
+    <div class="kv">
+      <div><span>Nomor</span><b>${esc(order.number)}</b></div>
+      <div><span>ID order</span><b>${esc(order.id)}</b></div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="copyText('${order.number}');">
+        <span class="material-symbols-rounded">content_copy</span> Salin nomor
+      </button>
+      <button class="btn ghost" onclick="closeModal();go('order')">Lihat riwayat</button>
+    </div>`);
+  renderAll();
+}
+
+function checkOtp(id){
+  const o = S.orders.find(x => x.id === id);
+  if(!o) return;
+  // DEMO: di versi asli, status diambil dari API penyedia
+  toast('Belum ada OTP masuk untuk ' + o.number);
+}
+
+/* =====================================================
+   DEPOSIT (pending sampai admin konfirmasi via bot Telegram)
+   ===================================================== */
+function setDep(v, el){
+  $('dep-amount').value = v;
+  document.querySelectorAll('.qchip').forEach(c => c.classList.toggle('on', c === el));
+}
+
+function createDeposit(){
+  if(!currentUser){ openAuth('login', createDeposit); return; }
+  const amount = parseInt($('dep-amount').value, 10);
+  if(!amount || amount < CFG.MIN_DEPOSIT){
+    openModal('Nominal terlalu kecil', `
+      <p>Minimal deposit adalah ${rp(CFG.MIN_DEPOSIT)}. Silakan isi nominal yang lebih besar.</p>
+      <div class="actions"><button class="btn" onclick="closeModal()">Mengerti</button></div>`);
+    return;
+  }
+  const dep = { id: uid('DEP'), amount, status:'pending', date: Date.now(), method: depMethod };
+  S.deposits.unshift(dep);
+  saveState();
+  $('dep-amount').value = '';
+  document.querySelectorAll('.qchip').forEach(c => c.classList.remove('on'));
+  renderAll();
+  openDepositInfo(dep.id, true);
+}
+
+function openDepositInfo(id, fresh){
+  const d = S.deposits.find(x => x.id === id);
+  if(!d) return;
+  openQrisInfo(d, fresh);
+}
+
+/* Dipanggil oleh sistem admin/bot setelah pembayaran dicek.
+   Di website statis ini hanya bisa dipanggil dari console atau
+   dihubungkan ke backend (webhook bot Telegram). */
+window.adminConfirmDeposit = function(id){
+  const d = S.deposits.find(x => x.id === id);
+  if(!d || d.status !== 'pending') return false;
+  d.status = 'sukses';
+  S.balance += d.amount;
+  saveState();
+  renderAll();
+  toast('Deposit ' + rp(d.amount) + ' berhasil masuk saldo');
+  return true;
+};
+
+/* =====================================================
+   PROFIL
+   ===================================================== */
+function askEditName(){
+  openModal('Ubah nama', `
+    <div class="field">
+      <label for="new-name">Nama tampilan</label>
+      <input class="input" id="new-name" maxlength="30" value="${esc(getUser() ? getUser().name : '')}">
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="saveName()">Simpan</button>
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+    </div>`);
+  setTimeout(() => $('new-name') && $('new-name').focus(), 150);
+}
+function saveName(){
+  const v = $('new-name').value.trim();
+  if(!v){ toast('Nama tidak boleh kosong'); return; }
+  const users = readUsers();
+  if(currentUser && users[currentUser]){
+    users[currentUser].name = v;
+    writeUsers(users);
+  }
+  closeModal();
+  renderAll();
+  toast('Nama berhasil diubah');
+}
+
+function askReset(){
+  openModal('Hapus data lokal?', `
+    <p>Semua saldo, riwayat order, dan deposit di perangkat ini akan dihapus. Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="actions">
+      <button class="btn danger" onclick="resetData()">Ya, hapus semua</button>
+      <button class="btn ghost" onclick="closeModal()">Batal</button>
+    </div>`);
+}
+function resetData(){
+  if(currentUser){
+    try{ localStorage.removeItem('nokos_data_' + currentUser); }catch(e){}
+  }
+  S = { balance:0, orders:[], deposits:[] };
+  closeModal();
+  renderAll();
+  toast('Saldo, order, dan deposit sudah dihapus');
+}
+
+/* =====================================================
+   LANDING, LOGIN & DAFTAR
+   ===================================================== */
+function enterApp(){
+  document.body.classList.add('in-app');
+  renderAll();
+  window.scrollTo({top:0});
+}
+function showLanding(){
+  document.body.classList.remove('in-app');
+  window.scrollTo({top:0});
+}
+
+function openAuth(mode = 'login', after = null){
+  pendingAfter = after;
+  renderAuth(mode);
+}
+function renderAuth(mode){
+  const isLogin = mode === 'login';
+  openModal(isLogin ? 'Masuk ke akun' : 'Daftar akun baru', `
+    <div class="auth-tabs">
+      <button class="auth-tab ${isLogin ? 'on' : ''}" onclick="renderAuth('login')">Masuk</button>
+      <button class="auth-tab ${!isLogin ? 'on' : ''}" onclick="renderAuth('register')">Daftar</button>
+    </div>
+    ${isLogin ? '' : `
+    <div class="field">
+      <label for="a-name">Nama lengkap</label>
+      <input class="input" id="a-name" maxlength="30" placeholder="Nama kamu">
+    </div>`}
+    <div class="field">
+      <label for="a-user">Username</label>
+      <input class="input" id="a-user" maxlength="20" placeholder="contoh: budi_01" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="a-pass">Password</label>
+      <input class="input" id="a-pass" type="password" maxlength="64" placeholder="Minimal 6 karakter"
+        autocomplete="${isLogin ? 'current-password' : 'new-password'}">
+    </div>
+    ${isLogin ? '' : `
+    <div class="field">
+      <label for="a-pass2">Ulangi password</label>
+      <input class="input" id="a-pass2" type="password" maxlength="64" autocomplete="new-password">
+    </div>`}
+    <div class="err" id="a-err"></div>
+    <div class="actions">
+      <button class="btn" onclick="submitAuth('${isLogin ? 'login' : 'register'}')">
+        ${isLogin ? 'Masuk' : 'Daftar sekarang'}
+      </button>
+    </div>`);
+}
+
+async function submitAuth(mode){
+  const setErr = m => { $('a-err').textContent = m; };
+  const u = ($('a-user').value || '').trim().toLowerCase().replace(/^@/, '');
+  const p = $('a-pass').value || '';
+  const users = readUsers();
+
+  if(mode === 'login'){
+    if(!u || !p) return setErr('Isi username dan password.');
+    const rec = users[u];
+    if(!rec) return setErr('Akun tidak ditemukan. Silakan daftar dulu.');
+    if(rec.hash !== await sha256(p)) return setErr('Password salah.');
+    return loginAs(u, rec.name, false);
+  }
+
+  const name = ($('a-name').value || '').trim();
+  const p2 = $('a-pass2').value || '';
+  if(!name) return setErr('Nama lengkap wajib diisi.');
+  if(!/^[a-z0-9_.]{3,20}$/.test(u)) return setErr('Username 3–20 karakter: huruf kecil, angka, titik, atau garis bawah.');
+  if(p.length < 6) return setErr('Password minimal 6 karakter.');
+  if(p !== p2) return setErr('Ulangi password belum sama.');
+  if(users[u]) return setErr('Username sudah dipakai.');
+
+  if(authBusy) return;
+  authBusy = true;
+  const hash = await sha256(p);
+
+  // Tampilkan loading selama 5 detik
+  let left = 5;
+  $('m-body').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <b>Membuat akun kamu...</b>
+      <p id="load-txt">Mohon tunggu ${left} detik</p>
+    </div>`;
+  const timer = setInterval(() => {
+    left--;
+    const el = $('load-txt');
+    if(el && left > 0) el.textContent = `Mohon tunggu ${left} detik`;
+  }, 1000);
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  clearInterval(timer);
+  authBusy = false;
+
+  // Cek ulang username, jaga-jaga jika sudah dipakai selama loading
+  const fresh = readUsers();
+  if(fresh[u]){
+    renderAuth('register');
+    $('a-err').textContent = 'Username sudah dipakai.';
+    return;
+  }
+  fresh[u] = { name, hash, created: Date.now() };
+  writeUsers(fresh);
+  loginAs(u, name, true);
+}
+
+function loginAs(u, name, isNew){
+  currentUser = u;
+  try{ localStorage.setItem(SESSION_KEY, u); }catch(e){}
+  S = loadUserData(u);
+  closeModal();
+  enterApp();
+  toast(isNew ? 'Akun dibuat. Selamat datang, ' + name : 'Selamat datang kembali, ' + name);
+  if(pendingAfter){
+    const f = pendingAfter;
+    pendingAfter = null;
+    setTimeout(f, 250);
+  }
+}
+
+function logout(){
+  saveState();
+  currentUser = null;
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+  S = { balance:0, orders:[], deposits:[] };
+  renderAll();
+  toast('Kamu sudah keluar');
+}
+
+/* Batalkan order yang masih menunggu OTP, saldo dikembalikan */
+function cancelOrder(id){
+  const o = S.orders.find(x => x.id === id);
+  if(!o || o.status !== 'menunggu') return;
+  openModal('Batalkan order?', `
+    <p>Nomor ${esc(o.number)} akan dibatalkan dan ${rp(o.price)} dikembalikan ke saldo kamu.</p>
+    <div class="actions">
+      <button class="btn danger" onclick="doCancel('${id}')">Ya, batalkan</button>
+      <button class="btn ghost" onclick="closeModal()">Tidak</button>
+    </div>`);
+}
+function doCancel(id){
+  const o = S.orders.find(x => x.id === id);
+  if(!o || o.status !== 'menunggu'){ closeModal(); return; }
+  o.status = 'batal';
+  S.balance += o.price;
+  saveState();
+  closeModal();
+  renderAll();
+  toast('Order dibatalkan, saldo dikembalikan');
+}
+
+/* =====================================================
+   FILTER LAYANAN (kategori + pencarian)
+   ===================================================== */
+let svcCat = 'all';
+let svcQuery = '';
+const SVC_CATS = [
+  ['all', 'Semua'], ['pop', 'Populer'], ['sosmed', 'Sosmed'],
+  ['ecom', 'E-commerce'], ['ai', 'AI'], ['lain', 'Lainnya']
+];
+
+function setSvcCat(k){
+  svcCat = k;
+  renderServiceLists();
+}
+/* Pilihan server gaya swipe: kartu bisa digeser, server aktif ditentukan
+   saat geseran berhenti. Harga di daftar layanan ikut berubah. */
+function renderServerSwipe(){
+  const sample = SERVICES[0]; // WhatsApp sebagai contoh harga
+  const html = `
+    <div class="srv-track">
+      ${SERVERS.map(s => `
+        <button class="srv-card ${s.id === selectedServer ? 'on' : ''}" data-srv="${s.id}" onclick="setServer('${s.id}')">
+          <span class="srv-tag">${s.name}</span>
+          <b>${s.label}</b>
+          <small>${sample.name} mulai ${rp(priceFor(sample, selectedCountry, s.id))}</small>
+        </button>`).join('')}
+    </div>
+    <div class="srv-dots">
+      ${SERVERS.map(s => `<i class="${s.id === selectedServer ? 'on' : ''}" data-dot="${s.id}"></i>`).join('')}
+    </div>`;
+  ['svc-server', 'svc-server2'].forEach(id => {
+    const el = $(id);
+    if(!el) return;
+    el.innerHTML = html;
+    attachSwipe(el.querySelector('.srv-track'));
+  });
+}
+
+function attachSwipe(track){
+  const cardW = () => track.querySelector('.srv-card').offsetWidth + 10; // 10 = gap
+  const indexNow = () => Math.max(0, SERVERS.findIndex(s => s.id === selectedServer));
+
+  // posisikan kartu pada server yang aktif
+  requestAnimationFrame(() => { track.scrollLeft = indexNow() * cardW(); });
+
+  // pilih server ketika geseran berhenti
+  let timer;
+  track.addEventListener('scroll', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const i = Math.round(track.scrollLeft / cardW());
+      const id = SERVERS[Math.min(SERVERS.length - 1, Math.max(0, i))].id;
+      if(id !== selectedServer) applyServer(id, false);
+    }, 120);
+  }, { passive: true });
+
+  // geser dengan mouse di desktop
+  let dragging = false, startX = 0, startLeft = 0;
+  track.addEventListener('pointerdown', e => {
+    if(e.pointerType !== 'mouse') return;
+    dragging = true;
+    startX = e.clientX;
+    startLeft = track.scrollLeft;
+    track.classList.add('drag');
+    track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove', e => {
+    if(!dragging) return;
+    track.scrollLeft = startLeft - (e.clientX - startX);
+  });
+  const endDrag = e => {
+    if(!dragging) return;
+    dragging = false;
+    track.classList.remove('drag');
+    const i = Math.round(track.scrollLeft / cardW());
+    track.scrollTo({ left: Math.min(SERVERS.length - 1, Math.max(0, i)) * cardW(), behavior: 'smooth' });
+  };
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointercancel', endDrag);
+}
+
+/* Terapkan server: simpan, perbarui harga daftar, dan tandai kartu aktif */
+function applyServer(id, showToast){
+  selectedServer = id;
+  try{ localStorage.setItem('nokos_server', id); }catch(e){}
+  renderServiceLists();
+  document.querySelectorAll('.srv-card').forEach(c => c.classList.toggle('on', c.dataset.srv === id));
+  document.querySelectorAll('.srv-dots i').forEach(d => d.classList.toggle('on', d.dataset.dot === id));
+  if(showToast) toast('Dipilih: ' + serverName(id) + ' (' + serverOf(id).label.toLowerCase() + ')');
+}
+
+function setServer(id){
+  applyServer(id, true);
+  // gulir kartu ke server yang dipilih
+  document.querySelectorAll('.srv-track').forEach(track => {
+    const card = track.querySelector(`[data-srv="${id}"]`);
+    if(card) track.scrollTo({ left: card.offsetLeft - track.offsetLeft - 2, behavior: 'smooth' });
+  });
+}
+function setSvcQuery(v){
+  svcQuery = v;
+  ['svc-q', 'svc-q2'].forEach(id => {
+    const el = $(id);
+    if(el && el !== document.activeElement) el.value = v;
+  });
+  renderServiceLists();
+}
+function renderServiceLists(){
+  // layanan populer selalu tampil di urutan depan
+  let arr = [...SERVICES]
+    .sort((a, b) => (b.pop ? 1 : 0) - (a.pop ? 1 : 0))
+    .map(s => ({ ...s, price: priceFor(s, selectedCountry) }));
+  if(svcCat === 'pop') arr = arr.filter(s => s.pop);
+  else if(svcCat !== 'all') arr = arr.filter(s => s.cat === svcCat);
+  const q = svcQuery.trim().toLowerCase();
+  if(q) arr = arr.filter(s => s.name.toLowerCase().includes(q));
+
+  const chips = SVC_CATS.map(([k, l]) =>
+    `<button class="qchip ${k === svcCat ? 'on' : ''}" onclick="setSvcCat('${k}')">${l}</button>`).join('');
+  ['svc-chips', 'svc-chips2'].forEach(id => { const el = $(id); if(el) el.innerHTML = chips; });
+
+
+  const empty = emptyBox('search_off', 'Layanan tidak ditemukan. Coba kata lain atau pilih kategori lain.');
+  $('home-services').innerHTML = arr.length ? arr.map(s => `
+    <button class="svc" onclick="pickService('${s.id}')">
+      ${svcIcon(s)}
+      <div class="name">${esc(s.name)}<small>${CATS_LABEL(s.cat)} · OTP masuk otomatis</small></div>
+      <div class="price">${rp(s.price)}</div>
+    </button>`).join('') : empty;
+
+  $('order-services').innerHTML = arr.length ? arr.map(s => `
+    <button class="svc ${s.id === selectedSvc ? 'selected' : ''}" onclick="pickService('${s.id}')">
+      ${svcIcon(s)}
+      <div class="name">${esc(s.name)}<small>${CATS_LABEL(s.cat)}</small></div>
+      <div class="price">${rp(s.price)}</div>
+    </button>`).join('') : empty;
+}
+function CATS_LABEL(c){
+  return ({sosmed:'Sosial media', ecom:'E-commerce', ai:'AI', lain:'Lainnya'})[c] || 'Layanan';
+}
+
+/* =====================================================
+   METODE DEPOSIT (Transfer bank / QRIS)
+   ===================================================== */
+const depMethod = 'qris'; // satu-satunya metode deposit
+function qrisFail(el){
+  el.outerHTML = '<div class="qris-miss">QRIS tidak dapat dimuat. Hubungi admin.</div>';
+}
+function openQrisInfo(d, fresh){
+  const hasQris = !!CFG.QRIS_URL;
+  openModal(fresh ? 'Bayar dengan QRIS' : 'Detail QRIS', `
+    <p>Scan QRIS di bawah sesuai nominal <b>${rp(d.amount)}</b>. Saldo masuk otomatis. layanan online 24 jam.</p>
+    <div class="qris-box" ${hasQris ? 'onclick="openQrisZoom()"' : ''}>
+      ${hasQris
+        ? `<img class="qris-img" src="${esc(CFG.QRIS_URL)}" alt="QRIS NokosStore" onerror="qrisFail(this)">
+           <small><span class="material-symbols-rounded">zoom_in</span> Ketuk untuk memperbesar</small>`
+        : '<div class="qris-miss">QRIS belum diatur. Hubungi admin.</div>'}
+    </div>
+    <div class="kv">
+      <div><span>ID deposit</span><b>${esc(d.id)}</b></div>
+      <div><span>Nominal</span><b>${rp(d.amount)}</b></div>
+      <div><span>Status</span><b><span class="badge pending" style="margin:0">Pending</span></b></div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" onclick="showInvoice('dep','${d.id}')">
+        <span class="material-symbols-rounded">receipt</span> Lihat invoice
+      </button>
+      <button class="btn ghost" onclick="closeModal()">Tutup</button>
+    </div>`);
+}
+
+/* =====================================================
+   ZOOM QRIS (cubit, geser, pinch, dan dobel ketuk)
+   ===================================================== */
+let zs = { scale: 1, x: 0, y: 0 };
+function applyZoom(){
+  $('zoom-img').style.transform = `translate(${zs.x}px, ${zs.y}px) scale(${zs.scale})`;
+}
+function openQrisZoom(){
+  if(!CFG.QRIS_URL) return;
+  $('zoom-img').src = CFG.QRIS_URL;
+  zs = { scale: 1, x: 0, y: 0 };
+  applyZoom();
+  $('zoom').classList.add('show');
+}
+function closeZoom(){ $('zoom').classList.remove('show'); }
+function zoomReset(){ zs = { scale: 1, x: 0, y: 0 }; applyZoom(); }
+function zoomBy(d){
+  zs.scale = Math.min(4, Math.max(1, zs.scale + d));
+  if(zs.scale === 1){ zs.x = 0; zs.y = 0; }
+  applyZoom();
+}
+(function initZoom(){
+  const stage = $('zoom-stage');
+  const pts = new Map();
+  let lastDist = 0;
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 0.2 : -0.2);
+  }, { passive: false });
+  stage.addEventListener('dblclick', zoomReset);
+  stage.addEventListener('pointerdown', e => {
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', e => {
+    if(!pts.has(e.pointerId)) return;
+    const prev = pts.get(e.pointerId);
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if(pts.size === 1 && zs.scale > 1){
+      zs.x += e.clientX - prev.x;
+      zs.y += e.clientY - prev.y;
+      applyZoom();
+    }else if(pts.size === 2){
+      const [a, b] = [...pts.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if(lastDist){
+        zs.scale = Math.min(4, Math.max(1, zs.scale * d / lastDist));
+        if(zs.scale === 1){ zs.x = 0; zs.y = 0; }
+        applyZoom();
+      }
+      lastDist = d;
+    }
+  });
+  const end = e => { pts.delete(e.pointerId); lastDist = 0; };
+  stage.addEventListener('pointerup', end);
+  stage.addEventListener('pointercancel', end);
+})();
+
+/* =====================================================
+   INVOICE (bisa dicetak / disimpan sebagai PDF)
+   ===================================================== */
+function showInvoice(type, id){
+  let inv;
+  if(type === 'order'){
+    const o = S.orders.find(x => x.id === id);
+    if(!o) return;
+    const c = countryOf(o.country || 'ID');
+    inv = {
+      no: 'INV-' + o.id, date: o.date, total: o.price,
+      status: o.status === 'batal' ? 'Dibatalkan, saldo dikembalikan' : 'Lunas',
+      rows: [
+        ['Layanan', o.name],
+        ['Negara', flagOf(c.c) + ' ' + c.n],
+        ...(o.provider ? [['Provider', providerName(o.provider)]] : []),
+        ['Server', serverName(o.server)],
+        ['Nomor', o.number],
+        ['Status OTP', orderStatus(o).label]
+      ]
+    };
+  }else{
+    const d = S.deposits.find(x => x.id === id);
+    if(!d) return;
+    inv = {
+      no: 'INV-' + d.id, date: d.date, total: d.amount,
+      status: d.status === 'pending' ? 'Menunggu konfirmasi admin' : 'Lunas',
+      rows: [
+        ['Jenis', 'Deposit saldo'],
+        ['Metode', 'QRIS'],
+        ['ID deposit', d.id]
+      ]
+    };
+  }
+  const me = getUser();
+  openModal('Invoice', `
+    <div id="inv-print" class="invoice">
+      <div class="inv-head">
+        <div class="brand-mark"><span class="material-symbols-rounded">sim_card</span></div>
+        <div>
+          <b class="display" style="font-size:18px">NokosStore</b>
+          <small style="display:block;color:var(--muted)">Invoice</small>
+        </div>
+      </div>
+      <div class="inv-meta">
+        <div><small>No. invoice</small><b>${esc(inv.no)}</b></div>
+        <div><small>Tanggal</small><b>${fmtDate(inv.date)}</b></div>
+        <div><small>Pembeli</small><b>${esc(me ? me.name : '-')}${currentUser ? ' (@' + esc(currentUser) + ')' : ''}</b></div>
+        <div><small>Status</small><b>${esc(inv.status)}</b></div>
+      </div>
+      <div class="kv">
+        ${inv.rows.map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}
+      </div>
+      <div class="inv-total"><span>Total</span><b>${rp(inv.total)}</b></div>
+      <p class="inv-foot">Terima kasih telah menggunakan NokosStore.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="window.print()">
+        <span class="material-symbols-rounded">print</span> Simpan sebagai PDF
+      </button>
+      <button class="btn ghost" onclick="closeModal()">Tutup</button>
+    </div>`);
+}
+
+/* =====================================================
+   PILIHAN PROVIDER (Indonesia)
+   ===================================================== */
+function providerChipsHTML(){
+  return `
+    <div class="prov-box">
+      <small>Pilih provider</small>
+      <div class="chips">
+        ${PROVIDERS.map(p => `
+          <button class="qchip ${p.id === previewProvider ? 'on' : ''}" onclick="setProvider('${p.id}')">${p.name}</button>`).join('')}
+      </div>
+    </div>`;
+}
+/* Ganti provider: nomor baru dibuat sesuai awalan provider tersebut */
+function setProvider(id){
+  previewProvider = id;
+  openPreview(previewSvc);
+}
+
+/* =====================================================
+   ANIMASI LANDING: marquee layanan & reveal saat scroll
+   ===================================================== */
+(function initMotion(){
+  const landing = document.getElementById('landing');
+  if(!landing) return;
+
+  // marquee berisi nama semua layanan
+  const names = SERVICES.map(s => s.name).join('  •  ') + '  •  ';
+  const m = document.createElement('div');
+  m.className = 'marquee';
+  m.setAttribute('aria-hidden', 'true');
+  m.innerHTML = `<div class="marquee-track"><span>${esc(names)}</span><span>${esc(names)}</span></div>`;
+  const firstSec = landing.querySelector('.lp-sec');
+  if(firstSec) landing.insertBefore(m, firstSec);
+
+  // elemen yang muncul saat di-scroll
+  landing.querySelectorAll('.lp-sec, .lp-final').forEach(el => el.classList.add('reveal'));
+  landing.querySelectorAll('.feat').forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i * 90) + 'ms';
+  });
+
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if(en.isIntersecting){
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    landing.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }else{
+    landing.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+})();
+
+/* =====================================================
+   MASKOT NOKKI: sapaan, arahan, dan panduan
+   ===================================================== */
+let bubbleT = null;
+
+/* Arahan sesuai kondisi pengguna saat ini */
+function mascotTip(){
+  if(!currentUser)
+    return 'Kamu belum masuk. Daftar dulu untuk mulai membeli nomor dan mengisi saldo.';
+  if(S.balance < CFG.MIN_DEPOSIT)
+    return 'Saldo kamu masih kosong. Isi saldo lewat QRIS di menu Deposit, minimal Rp 15.000.';
+  return 'Siap! Pilih negara, lalu layanan. Harga menyesuaikan negara dan server.';
+}
+
+function bubbleHTML(text){
+  return `
+    <div>${esc(text)}</div>
+    <div class="mb-actions">
+      <button onclick="openGuide()">Lihat panduan</button>
+    </div>`;
+}
+
+function showBubble(html, ms = 0){
+  $('mascot-bubble').innerHTML = html;
+  $('mascot-bubble').classList.add('show');
+  $('mascot').classList.add('talk');
+  clearTimeout(bubbleT);
+  if(ms) bubbleT = setTimeout(hideBubble, ms);
+}
+function hideBubble(){
+  $('mascot-bubble').classList.remove('show');
+  $('mascot').classList.remove('talk');
+}
+
+/* Klik Nokki: buka atau tutup gelembung arahan */
+function mascotClick(){
+  if($('mascot-bubble').classList.contains('show')){
+    hideBubble();
+    return;
+  }
+  showBubble(bubbleHTML(mascotTip()));
+}
+
+/* Sapaan saat halaman dibuka */
+function mascotGreet(){
+  showBubble(bubbleHTML('Halo, selamat datang di NokosStore! Aku Nokki. ' + mascotTip()), 9000);
+}
+
+/* Panduan langkah untuk pengguna baru */
+function openGuide(){
+  hideBubble();
+  const steps = [
+    ['Daftar atau masuk', 'Buat akun dengan nama, username, dan password. Layanan bisa dilihat dulu tanpa akun.'],
+    ['Isi saldo lewat QRIS', 'Minimal deposit Rp 15.000. Scan QRIS sesuai nominal, lalu tunggu admin mengonfirmasi.'],
+    ['Pilih negara dan provider', 'Pilih negara tujuan. Untuk Indonesia, pilih Telkomsel, Indosat, atau Axis.'],
+    ['Pilih server dan layanan', 'Geser kartu server sesuai kebutuhan, lalu pilih layanan seperti WhatsApp atau Telegram.'],
+    ['Lanjutkan pembelian', 'Cek nomor yang disensor dan status OTP, lalu tekan Lanjutkan pembelian.'],
+    ['Ambil kode OTP', 'Kode muncul di Riwayat. Jika tidak masuk, batalkan order dan saldo kembali otomatis.']
+  ];
+  openModal('Panduan NokosStore', `
+    ${steps.map(([t, d], i) => `
+      <div class="guide-step">
+        <span class="gs-no">${i + 1}</span>
+        <div><b>${esc(t)}</b><p>${esc(d)}</p></div>
+      </div>`).join('')}
+    <div class="actions">
+      ${currentUser
+        ? `<button class="btn" onclick="closeModal();go('deposit')">Isi saldo sekarang</button>`
+        : `<button class="btn" onclick="closeModal();openAuth('register')">Daftar sekarang</button>`}
+      <button class="btn ghost" onclick="closeModal()">Mengerti</button>
+    </div>`);
+}
+
+/* Sapaan otomatis setelah halaman siap */
+setTimeout(mascotGreet, 900);
+
+/* ===== INIT: pulihkan sesi jika ada, tampilkan landing ===== */
+(function boot(){
+  let u = null;
+  try{ u = localStorage.getItem(SESSION_KEY); }catch(e){}
+  const users = readUsers();
+  if(u && users[u]){
+    currentUser = u;
+    S = loadUserData(u);
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
